@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
+<title>Slides — Han Seakvitheathnin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Druk Wide Bold';src:url("../fonts/DrukWideBold.ttf") format("truetype");font-weight:700;font-display:swap}
+:root{--display:'Druk Wide Bold','Druk Wide Trial','Druk Wide','Archivo Black',Impact,sans-serif;--mono:'Fragment Mono',ui-monospace,Menlo,monospace;--gap:20px;--cw:calc((100vw - 30px - 3 * var(--gap)) / 4)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;color:#fff;font:15px/1 var(--mono);text-transform:uppercase;overflow:hidden;overscroll-behavior:none}
+a{color:inherit;text-decoration:none}
+
+
+
+
+#track{position:fixed;left:0;top:clamp(110px,30vh,271px);bottom:15px;display:flex;gap:var(--gap);padding:0 15px;will-change:transform;cursor:grab;touch-action:none;user-select:none}
+#track.drag{cursor:grabbing}
+.card{width:var(--cw);flex:none;display:flex;flex-direction:column;gap:14px}
+.meta{display:flex;justify-content:space-between;gap:12px;white-space:nowrap}.meta span:first-child{overflow:hidden;text-overflow:ellipsis}
+.box{position:relative;flex:1;min-height:0}
+.media{position:absolute;inset:0;overflow:hidden;pointer-events:none;transition:opacity .35s ease}
+.ui{position:absolute;inset:0;border:1px solid rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s ease}
+.ui b{position:absolute;width:7px;height:7px;background:#fff}
+.ui b:nth-child(1){left:-4px;top:-4px}.ui b:nth-child(2){right:-4px;top:-4px}.ui b:nth-child(3){left:-4px;bottom:-4px}.ui b:nth-child(4){right:-4px;bottom:-4px}
+@media(hover:hover){.card:hover .media{opacity:.5}.card:hover .ui{opacity:1}}
+.media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#wipe{position:fixed;inset:0;background:#fff;mix-blend-mode:difference;z-index:50;transform:translateY(100%);pointer-events:none}
+@media(max-width:1024px){:root{--cw:44vw}#track{top:120px}}
+@media(max-width:600px){:root{--cw:78vw}#track{top:104px}}
+/* short landscape screens: size cards from the height so they stay portrait */
+@media(max-height:520px){:root{--cw:min(40vw,calc((100dvh - 80px) * .62))}#track{top:64px;bottom:10px}.card{gap:8px}}
+/* ---- theme: F/2.4 = dark (default), F/1.4 = light. Light inverts the whole page, then flips photos and video back ---- */
+html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}
+html[data-theme="light"] img,html[data-theme="light"] video{filter:invert(1) hue-rotate(180deg)}
+/* ---- shared navbar (same on every page) ---- */
+header{position:fixed;top:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;gap:24px;padding:calc(22px + env(safe-area-inset-top,0px)) max(15px,env(safe-area-inset-right,0px)) 22px max(15px,env(safe-area-inset-left,0px));mix-blend-mode:difference;color:#fff;pointer-events:none;font:13px/1.3 var(--mono);text-transform:uppercase}
+header a,header span,header button{pointer-events:auto}
+.hl{display:flex;gap:clamp(24px,3.5vw,56px);white-space:nowrap}.hr{display:flex;justify-content:flex-end;gap:clamp(24px,5vw,96px);white-space:nowrap}
+.name{font-family:var(--display);font-size:13px;text-align:center;white-space:nowrap}
+header .fs,header .tb{white-space:nowrap;background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;text-transform:inherit;cursor:pointer}
+@media(max-width:1300px){.hl span:nth-child(2){display:none}}
+/* tablet / phone landscape: one row, name left, links right */
+@media(max-width:1024px){header{display:flex;align-items:baseline;gap:20px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:16px}.name{order:-1;margin-right:auto;text-align:left;font-size:12px}.hl span{display:none}.hl,.hr{gap:20px}}
+/* phone: name (+ fullscreen) on the first row, the four links spread across the second */
+@media(max-width:600px){header{flex-wrap:wrap;justify-content:space-between;row-gap:10px;column-gap:0;padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:14px;font-size:12px}.name{flex:1 1 calc(100% - 40px);font-size:11px}.hr{display:contents}header .fs{order:-1}}
+img,video{-webkit-user-drag:none;user-select:none}
+</style>
+</head>
+<body>
+<div id="wipe"></div>
+<header>
+  <div class="hl"><span id="clock">Phnom Penh, (CAM) 4:00 PM</span><span>Stay focused.</span><a href="../index.html" data-go>Work [15]</a></div>
+  <a class="name" href="../index.html" data-go>Han Seakvitheathnin</a>
+  <div class="hr"><button type="button" class="fs" id="fsBtn" aria-label="Toggle full screen">[+]</button><button type="button" class="tb" id="themeBtn" aria-label="Switch to light theme" aria-pressed="false">F/2.4</button><a href="../slides/index.html" data-go aria-current="page">Index</a><a href="../about/index.html" data-go>About</a><a href="../contact/index.html" data-go>Contact</a></div>
+</header>
+<div id="track"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+// video: path relative to this file, e.g. "../videos/numero.mp4"
+const P=[
+["Numero Netherlands x Normani","2026","#0d3550,#c9772f"],["Converse x Billie Eilish","2026","#1b1b1b,#3d7a3a"],
+["Genesis","2026","#0a0f14,#7a5b3a"],["Culligan","2026","#08324d,#5fb4d6"],
+["Nylon France","2025","#2a1030,#d04b7a"],["Katseye x InStyle","2025","#301a10,#e0a060"],
+["Eilish No.3","2025","#10251a,#9ad0a0"],["Your Turn","2024","#1a1a30,#5a6ad0"],
+["Guest in Residence","2024","#2b2620,#cbbd9e"],["YSL x Lenny Kravitz","2024","#100c0c,#a02020"],
+["Netflix - The Mother","2024","#0c1420,#c03030"],["GQ x MGK x Megan Fox","2024","#201010,#d08030"],
+["Gentlemans Journal","2023","#1c2218,#8a9a60"],["InStyle Mexico","2023","#301020,#f0a040"],
+["Rockin' Eve","2023","#050a10,#3070a0"]
+].map(a=>({title:a[0],year:a[1],c:a[2].split(","),video:""}));
+
+const F=["01-numero-netherlands-x-normani/index.html", "02-converse-x-billie-eilish/index.html", "03-genesis/index.html", "04-culligan/index.html", "05-nylon-france/index.html", "06-katseye-x-instyle/index.html", "07-eilish-no-3/index.html", "08-your-turn/index.html", "09-guest-in-residence/index.html", "10-ysl-x-lenny-kravitz/index.html", "11-netflix-the-mother/index.html", "12-gq-x-mgk-x-megan-fox/index.html", "13-gentlemans-journal/index.html", "14-instyle-mexico/index.html", "15-rockin-eve/index.html"];
+const track=document.getElementById('track');
+const slug=t=>t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+// 3 copies of the set so the row can wrap seamlessly
+const COPIES=3;
+for(let c=0;c<COPIES;c++){
+  P.forEach((p,i)=>{
+    const d=document.createElement('a');d.href='../project/'+F[i];d.dataset.go='';d.className='card';
+    if(c>0){d.setAttribute('aria-hidden','true');d.tabIndex=-1;}
+    // placeholder image (swap the seed URL for your own file, e.g. "../images/numero.jpg")
+    const IMG=["https://images.unsplash.com/photo-1632765866070-3fadf25d3d5b?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1709010499458-74a6b5f6188f?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1655837425341-b59fc33c5898?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1519455953755-af066f52f1a6?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1671485429799-249e8acb2ee6?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1767570280633-b8446dcbd80e?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1485846147915-69f12fbd03b9?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1574201635302-388dd92a4c3f?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1592245734204-6561336cbc6f?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1519381950710-20a66031fe2a?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1770543774604-627428e99231?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1604274859081-898bd2972f55?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1539136831565-c85f368448a3?auto=format&fit=crop&w=900&h=1200&q=75"];
+    const img=IMG[i];
+    d.innerHTML=`<div class="meta"><span>${p.title}</span><span>${p.year}</span></div><div class="box"><div class="media" style="background:linear-gradient(160deg,${p.c[0]},${p.c[1]} 150%)"><img src="${img}" alt="" draggable="false"></div><div class="ui"><b></b><b></b><b></b><b></b><span>[View project]</span></div></div>`;
+    if(p.video){const v=document.createElement('video');Object.assign(v,{src:p.video,muted:true,loop:true,autoplay:true,playsInline:true});d.querySelector('.media').append(v);v.play().catch(()=>{});}
+    track.append(d);
+  });
+}
+
+// infinite smooth horizontal scroll (GSAP) with velocity bounce + skew
+const S={t:0,x:0};
+let setW=1;
+const measure=()=>{const n=P.length;setW=track.children[n].offsetLeft-track.children[0].offsetLeft};
+measure();addEventListener('resize',measure);addEventListener('load',measure);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const wrapX=gsap.utils.wrap(0,1);
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+gsap.set(track,{transformOrigin:'50% 50%'});
+gsap.ticker.add(()=>{
+  // lerp toward target (0.085, same as the reference)
+  S.x=S.x+(S.t-S.x)*.085;
+  if(Math.abs(S.t-S.x)<.01)S.x=S.t;
+  // velocity = remaining distance / viewport width -> squash + skew
+  const velo=RM?0:clamp((S.t-S.x)/innerWidth,-1,1),bounce=1-Math.abs(velo*.25),skew=velo*7.5;
+  // wrap into one set width; middle copy is the "home" copy
+  const m=wrapX(S.x/setW)*setW;
+  gsap.set(track,{x:-(setW+m),scaleY:bounce,skewX:skew});
+});
+const push=d=>{S.t+=d};
+addEventListener('wheel',e=>{e.preventDefault();push((Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*1.2);},{passive:false});
+addEventListener('keydown',e=>{const s=innerWidth/4;if(e.key==='ArrowRight')push(s);if(e.key==='ArrowLeft')push(-s);});
+// drag / swipe
+let down=false,sx=0,sy=0,st=0,lx=0,vel=0,moved=0,ax=0;
+track.addEventListener('pointerdown',e=>{down=true;moved=0;ax=0;sx=e.clientX;sy=e.clientY;lx=0;st=S.t;vel=0;track.classList.add('drag');});
+track.addEventListener('pointermove',e=>{if(!down)return;
+  // follow whichever axis the gesture started on (vertical swipes on phones scroll the row as well)
+  const dx=e.clientX-sx,dy=e.clientY-sy;if(!ax&&Math.max(Math.abs(dx),Math.abs(dy))>6)ax=Math.abs(dx)>=Math.abs(dy)?1:2;
+  const d=ax===2?dy:dx,p=sx+sy+d;
+  S.t=st-d;moved=Math.max(moved,Math.abs(d));
+  if(moved>6&&!track.hasPointerCapture(e.pointerId))track.setPointerCapture(e.pointerId); // capture only once it's a real drag, so clicks still hit the links
+  vel=lx?lx-p:0;lx=p;});
+const up=()=>{if(!down)return;down=false;track.classList.remove('drag');S.t+=vel*14;};
+track.addEventListener('pointerup',up);track.addEventListener('pointercancel',up);
+
+// intro
+gsap.from('.card',{x:180,opacity:0,duration:1.2,ease:'expo.out',stagger:{amount:1.2},delay:.25});
+
+// page transition (wipe up on enter, wipe up to cover on leave)
+// page transition overlay: always driven by yPercent (100 = below screen, 0 = covering, -100 = above)
+gsap.set('#wipe',{y:0,yPercent:100});
+const wipeIn=href=>{try{sessionStorage.setItem('wipe','1')}catch(x){}gsap.to('#wipe',{yPercent:0,duration:.7,ease:'expo.inOut',onComplete:()=>{location.href=href}})};
+const wipeOut=(delay=0)=>gsap.to('#wipe',{yPercent:-100,duration:.8,ease:'expo.inOut',delay,onComplete:()=>gsap.set('#wipe',{yPercent:100})});
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[data-go]');if(!a||a.classList.contains('row'))return;
+  if(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return; // new tab/window: browser default
+  if(moved>6){e.preventDefault();moved=0;return;} // it was a drag, not a click
+  const u=new URL(a.href,location.href);
+  if(u.pathname===location.pathname&&u.search===location.search){if(!u.hash)e.preventDefault();return} // already here: no wipe
+  e.preventDefault();wipeIn(a.href);
+});
+try{if(sessionStorage.getItem('wipe')){sessionStorage.removeItem('wipe');gsap.set('#wipe',{yPercent:0});wipeOut(.1)}}catch(e){}
+// back/forward cache restores the page as it was left (overlay still covering) -> reveal it
+addEventListener('pageshow',e=>{if(e.persisted&&gsap.getProperty('#wipe','yPercent')===0)wipeOut()});
+
+function tick(){try{clock.textContent='Phnom Penh, (CAM) '+new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Phnom_Penh',hour:'numeric',minute:'2-digit'});}catch(e){}}
+tick();setInterval(tick,20000);
+</script>
+<script>/* full screen [+] / [–]. Browsers drop full screen on every page load, so this page holds full screen and the site
+   keeps running inside a full-screen frame on top of it; links navigate the frame until [–] or Esc */
+(function(){var b=document.getElementById('fsBtn');if(!b)return;var de=document.documentElement;
+if(window.top!==window){ // inside the full-screen frame: [–] asks the outer page to leave full screen
+  b.textContent='[–]';b.setAttribute('aria-pressed','true');
+  try{parent.postMessage({fsShell:'url',href:location.href,title:document.title},'*')}catch(e){}
+  b.addEventListener('click',function(){parent.postMessage({fsShell:'exit'},'*')});return}
+var req=de.requestFullscreen||de.webkitRequestFullscreen,ex=document.exitFullscreen||document.webkitExitFullscreen;
+if(!req){b.style.display='none';return}
+var on=function(){return document.fullscreenElement||document.webkitFullscreenElement},frame=null,href=location.href;
+function open(){
+  href=location.href;frame=document.createElement('iframe');frame.src=location.href;frame.title=document.title;frame.allow='autoplay; fullscreen';
+  frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .3s';
+  frame.onload=function(){frame&&(frame.style.opacity='1');document.querySelectorAll('video').forEach(function(v){v.pause()})};
+  document.body.appendChild(frame);
+  de.style.filter='none'; // the frame applies its own theme; inverting it here as well would flip it twice
+}
+function close(){if(!frame)return;var f=frame;frame=null;de.style.filter='';
+  try{var l=localStorage.getItem('theme')==='light',t=document.getElementById('themeBtn'); // pick up a theme change made inside the frame
+    l?de.setAttribute('data-theme','light'):de.removeAttribute('data-theme');if(t){t.textContent=l?'F/1.4':'F/2.4';t.setAttribute('aria-pressed',l?'true':'false')}}catch(e){}
+  if(href.split('#')[0]!==location.href.split('#')[0]){location.href=href;return} // stay on the page the visitor ended up on
+  f.remove();document.querySelectorAll('video[autoplay],video').forEach(function(v){v.play().catch(function(){})});
+}
+addEventListener('message',function(e){var d=e.data;if(!frame||!d||e.source!==frame.contentWindow)return;
+  if(d.fsShell==='url'){href=d.href;if(d.title)document.title=d.title}
+  if(d.fsShell==='exit'&&on())ex.call(document)});
+b.addEventListener('click',function(){on()?ex.call(document):req.call(de)});
+var sync=function(){var f=!!on();b.textContent=f?'[–]':'[+]';b.setAttribute('aria-pressed',f?'true':'false');
+  if(f&&!frame)open();else if(!f&&frame)close()};
+document.addEventListener('fullscreenchange',sync);document.addEventListener('webkitfullscreenchange',sync);sync()})();</script>
+<script>(function(){var b=document.getElementById("themeBtn");if(!b)return;var r=document.documentElement;
+// F/2.4 = dark (default), F/1.4 = light; the choice is remembered across pages
+function sync(){var l=r.getAttribute("data-theme")==="light";b.textContent=l?"F/1.4":"F/2.4";b.setAttribute("aria-pressed",l?"true":"false");b.setAttribute("aria-label",l?"Switch to dark theme":"Switch to light theme")}
+b.addEventListener("click",function(){var l=r.getAttribute("data-theme")!=="light";if(l)r.setAttribute("data-theme","light");else r.removeAttribute("data-theme");try{localStorage.setItem("theme",l?"light":"dark")}catch(e){}sync()});sync()})();</script>
+<script>(function(){
+// header menu hover: letters scramble through random letters, numbers and symbols, then settle left to right (GSAP). The name/logo is left alone.
+if(!window.gsap||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+var C="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+=?/<>[]{}~^",STEP=90; // STEP = ms between random swaps (higher = slower flicker)
+document.querySelectorAll("header a:not(.name),header button").forEach(function(el){var tw=null,t="",last=0,cur=[];
+  el.addEventListener("mouseenter",function(){if(tw)return;t=el.textContent;cur=t.split("");last=0;var o={p:0};
+    tw=gsap.to(o,{p:1,duration:.9+t.length*.05,ease:"none",onUpdate:function(){var n=Math.floor(o.p*t.length),now=performance.now(),swap=now-last>=STEP;if(swap)last=now;
+      for(var i=0;i<t.length;i++){if(i<n||t[i]===" ")cur[i]=t[i];else if(swap)cur[i]=C[Math.random()*C.length|0]}el.textContent=cur.join("")},
+      onComplete:function(){el.textContent=t;tw=null}})});
+  // a click restores the real label first, so the theme / fullscreen buttons can then swap it
+  el.addEventListener("click",function(){if(tw){tw.kill();tw=null;el.textContent=t}},true);
+});})();</script>
+<script>// no ghost image when dragging a photo, video or link (the pages use drag to scroll instead)
+document.addEventListener('dragstart',function(e){if(e.target&&e.target.closest&&e.target.closest('img,video,a,#track'))e.preventDefault()});</script>
+</body>
+</html>

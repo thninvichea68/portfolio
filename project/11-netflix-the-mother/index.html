@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
+<title>Netflix - The Mother — Han Seakvitheathnin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Archivo+Black&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../project.css">
+</head>
+<body>
+<div id="wipe"></div>
+<div data-barba="wrapper">
+<header>
+  <div class="hl"><span id="clock">Phnom Penh, (CAM) 4:00 PM</span><span>Stay focused.</span><a href="../../index.html" data-go>Work [15]</a></div>
+  <a class="name" id="nameNav" href="../../index.html" data-go>Han Seakvitheathnin</a>
+  <div class="hr"><button type="button" class="fs" id="fsBtn" aria-label="Toggle full screen">[+]</button><button type="button" class="tb" id="themeBtn" aria-label="Switch to light theme" aria-pressed="false">F/2.4</button><a href="../../slides/index.html" data-go>Index</a><a href="../../about/index.html" data-go>About</a><a href="../../contact/index.html" data-go>Contact</a></div>
+</header>
+<main data-barba="container" data-barba-namespace="project">
+<div id="track"></div>
+<div id="count"></div>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/barba.js/2.9.7/barba.umd.js"></script>
+<script>window.PROJECT={"year":"2024","title":"Netflix - The Mother","ind":"Entertainment / Television","c":["#0c1420","#c03030"],"word":"Mother","role":"Promo","brief":"Promotional work for a streaming thriller. Cold tones and hard cuts hold the tension without giving the plot away.","about":"Our team has shot many projects for Netflix - The Mother. We work with modern digital cameras and old lenses, and when a frame surprises us we keep it.","client":"Netflix - The Mother","sub":"Entertainment / Television","credits":[["Client","Netflix - The Mother"],["Year","2024"],["Industry","Entertainment / Television"],["Role","Promo"],["Director","Han Seakvitheathnin"],["Location","Phnom Penh"]],"media":{"a":"https://images.unsplash.com/photo-1519381950710-20a66031fe2a?auto=format&fit=crop&w=1000&h=1300&q=75","b":"https://images.unsplash.com/photo-1519381950710-20a66031fe2a?auto=format&fit=crop&w=1000&h=1300&q=75","c":"https://images.unsplash.com/photo-1673298061538-71459cf59a6f?auto=format&fit=crop&w=1000&h=1300&q=75","d":"https://images.unsplash.com/photo-1673298061538-71459cf59a6f?auto=format&fit=crop&w=1000&h=1300&q=75","e":"https://images.unsplash.com/photo-1672786236694-62b6aca16149?auto=format&fit=crop&w=1000&h=1300&q=75","f":"https://images.unsplash.com/photo-1706860204081-05e8adf6bc3f?auto=format&fit=crop&w=1000&h=1300&q=75","g":"https://images.unsplash.com/photo-1639506021946-bc7b57c85e58?auto=format&fit=crop&w=1000&h=1300&q=75","h":"https://images.unsplash.com/photo-1672786236694-62b6aca16149?auto=format&fit=crop&w=1000&h=1300&q=75","i":"https://assets.mixkit.co/videos/30416/30416-720.mp4","j":"https://images.unsplash.com/photo-1671561683147-fe3d5cd2e011?auto=format&fit=crop&w=1000&h=1300&q=75","k":"https://images.unsplash.com/photo-1565284600016-3dcf6c87fbd7?auto=format&fit=crop&w=1000&h=1300&q=75","l":"https://images.unsplash.com/photo-1706860204081-05e8adf6bc3f?auto=format&fit=crop&w=1000&h=1300&q=75"},"total":15,"next":{"title":"GQ x MGK x Megan Fox","href":"../12-gq-x-mgk-x-megan-fox/index.html"}};</script>
+<script src="../project.js"></script>
+<script>(function(){var b=document.getElementById("themeBtn");if(!b)return;var r=document.documentElement;
+// F/2.4 = dark (default), F/1.4 = light; the choice is remembered across pages
+function sync(){var l=r.getAttribute("data-theme")==="light";b.textContent=l?"F/1.4":"F/2.4";b.setAttribute("aria-pressed",l?"true":"false");b.setAttribute("aria-label",l?"Switch to dark theme":"Switch to light theme")}
+b.addEventListener("click",function(){var l=r.getAttribute("data-theme")!=="light";if(l)r.setAttribute("data-theme","light");else r.removeAttribute("data-theme");try{localStorage.setItem("theme",l?"light":"dark")}catch(e){}sync()});sync()})();</script>
+<script>(function(){
+// header menu hover: letters scramble through random letters, numbers and symbols, then settle left to right (GSAP). The name/logo is left alone.
+if(!window.gsap||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+var C="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+=?/<>[]{}~^",STEP=90; // STEP = ms between random swaps (higher = slower flicker)
+document.querySelectorAll("header a:not(.name),header button").forEach(function(el){var tw=null,t="",last=0,cur=[];
+  el.addEventListener("mouseenter",function(){if(tw)return;t=el.textContent;cur=t.split("");last=0;var o={p:0};
+    tw=gsap.to(o,{p:1,duration:.9+t.length*.05,ease:"none",onUpdate:function(){var n=Math.floor(o.p*t.length),now=performance.now(),swap=now-last>=STEP;if(swap)last=now;
+      for(var i=0;i<t.length;i++){if(i<n||t[i]===" ")cur[i]=t[i];else if(swap)cur[i]=C[Math.random()*C.length|0]}el.textContent=cur.join("")},
+      onComplete:function(){el.textContent=t;tw=null}})});
+  // a click restores the real label first, so the theme / fullscreen buttons can then swap it
+  el.addEventListener("click",function(){if(tw){tw.kill();tw=null;el.textContent=t}},true);
+});})();</script>
+</body>
+</html>

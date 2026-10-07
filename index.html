@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
+<title>Han Seakvitheathnin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Druk Wide Bold';src:url("fonts/DrukWideBold.ttf") format("truetype");font-weight:700;font-display:swap}
+:root{--bg:#020508;--fg:#fff;--display:'Druk Wide Bold','Druk Wide Trial','Druk Wide','Archivo Black',Impact,sans-serif;--mono:'Fragment Mono',ui-monospace,Menlo,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--fg);font:15px/1 var(--mono);text-transform:uppercase;overflow:hidden}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:inherit;text-decoration:none}
+#hero{position:fixed;inset:0;z-index:0}
+.layer{position:absolute;inset:0;overflow:hidden;background-size:cover}
+.layer video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* Adjust opacity between 0.1 and 0.9 */
+  pointer-events: none;
+}
+
+
+
+main{position:relative;z-index:5;display:flex;flex-direction:column;height:100vh;height:100dvh;padding:160px 8px 48px}
+/* the list scrolls on its own when the screen is too short for all 15 rows */
+#list{position:relative;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}#list::-webkit-scrollbar{display:none}
+:root{--cols:159px 478px minmax(0,1fr);--rw:clamp(200px,24vw,346px)}
+.row{position:relative;display:grid;grid-template-columns:var(--cols);flex:none;height:37px;align-items:center;padding:0 7px;cursor:pointer;width:942px;max-width:100%;isolation:isolate}
+.row.head{cursor:default;height:26px;margin-bottom:11px}
+.row .fill{position:absolute;left:0;right:0;top:50%;height:22px;margin-top:-11px;background:#fff;clip-path:inset(0 100% 0 0);z-index:-1}
+.row .ink{position:absolute;inset:0;display:grid;grid-template-columns:var(--cols);align-items:center;padding:0 7px;color:#000;clip-path:inset(0 100% 0 0);pointer-events:none}
+.row span{position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:12px;transition:color .01s}
+
+footer{position:fixed;left:15px;bottom:14px;z-index:10;display:flex;gap:80px;mix-blend-mode:difference}
+#reel{display:block;position:fixed;right:15px;bottom:15px;width:var(--rw);z-index:10;background:#fff;color:#000;padding:7px;cursor:pointer}
+#reel .t{display:flex;justify-content:space-between;align-items:center;font-family:var(--display);font-size:15px;padding-bottom:5px}
+#reel .t i{width:6px;height:6px;border-radius:50%;background:#000}
+#reel .v{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0a1a24;background-size:cover}
+#reel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#reel .cap{display: none;position:absolute;left:0;right:0;bottom:0;padding:8px 10px;font-family:var(--display);color:#e8d7b8;font-size:28px;line-height:.9}
+#wipe{position:fixed;inset:0;background:#fff;mix-blend-mode:difference;z-index:50;transform:translateY(100%);pointer-events:none}
+@media(max-width:1280px){:root{--cols:80px minmax(0,1.3fr) minmax(0,1fr)}}
+/* landscape screens: keep the rows clear of the reel card in the corner */
+@media(min-aspect-ratio:1/1){.row{max-width:calc(100% - var(--rw) - 24px)}}
+@media(max-width:900px){:root{--cols:64px minmax(0,1.2fr) minmax(0,1fr);--rw:220px}main{padding-top:120px}footer{gap:24px}}
+/* phone: year + title only (industry hidden), reel card hidden: the background already shows the project */
+@media(max-width:600px){:root{--cols:52px minmax(0,1fr)}.row>span:nth-of-type(3),.row .ink span:nth-of-type(3){display:none}main{padding:100px 4px 48px}.row{height:34px;max-width:100%}#reel{display:none}footer{left:12px;gap:20px}}
+/* short landscape screens (phones on their side) */
+@media(max-height:520px){main{padding-top:64px;padding-bottom:40px}.row{height:30px;max-width:100%}.row.head{height:22px;margin-bottom:2px}#reel{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---- theme: F/2.4 = dark (default), F/1.4 = light. Light inverts the whole page, then flips photos and video back ---- */
+html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}
+html[data-theme="light"] img,html[data-theme="light"] video{filter:invert(1) hue-rotate(180deg)}
+/* home: everything sits on the full-screen video, so the dark scrim, the list and the reel card keep their dark-theme look (only the header follows the theme) */
+html[data-theme="light"] .layer::after,html[data-theme="light"] main,html[data-theme="light"] #reel{filter:invert(1) hue-rotate(180deg)}
+/* the card is already flipped back as a whole, so its video must not be flipped a second time */
+html[data-theme="light"] #reel video{filter:none}
+/* ---- shared navbar (same on every page) ---- */
+header{position:fixed;top:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;gap:24px;padding:calc(22px + env(safe-area-inset-top,0px)) max(15px,env(safe-area-inset-right,0px)) 22px max(15px,env(safe-area-inset-left,0px));mix-blend-mode:difference;color:#fff;pointer-events:none;font:13px/1.3 var(--mono);text-transform:uppercase}
+header a,header span,header button{pointer-events:auto}
+.hl{display:flex;gap:clamp(24px,3.5vw,56px);white-space:nowrap}.hr{display:flex;justify-content:flex-end;gap:clamp(24px,5vw,96px);white-space:nowrap}
+.name{font-family:var(--display);font-size:13px;text-align:center;white-space:nowrap}
+header .fs,header .tb{white-space:nowrap;background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;text-transform:inherit;cursor:pointer}
+@media(max-width:1300px){.hl span:nth-child(2){display:none}}
+/* tablet / phone landscape: one row, name left, links right */
+@media(max-width:1024px){header{display:flex;align-items:baseline;gap:20px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:16px}.name{order:-1;margin-right:auto;text-align:left;font-size:12px}.hl span{display:none}.hl,.hr{gap:20px}}
+/* phone: name (+ fullscreen) on the first row, the four links spread across the second */
+@media(max-width:600px){header{flex-wrap:wrap;justify-content:space-between;row-gap:10px;column-gap:0;padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:14px;font-size:12px}.name{flex:1 1 calc(100% - 40px);font-size:11px}.hr{display:contents}header .fs{order:-1}}
+img,video{-webkit-user-drag:none;user-select:none}
+</style>
+</head>
+<body data-barba="wrapper">
+<div id="wipe"></div>
+<div id="hero"></div>
+
+<header>
+  <div class="hl"><span id="clock">Phnom Penh, (CAM) 4:00 PM</span><span>Stay focused.</span><a href="index.html" data-go aria-current="page">Work [15]</a></div>
+  <a class="name" href="index.html" data-go>Han Seakvitheathnin</a>
+  <div class="hr"><button type="button" class="fs" id="fsBtn" aria-label="Toggle full screen">[+]</button><button type="button" class="tb" id="themeBtn" aria-label="Switch to light theme" aria-pressed="false">F/2.4</button><a href="slides/index.html" data-go>Index</a><a href="about/index.html" data-go>About</a><a href="contact/index.html" data-go>Contact</a></div>
+</header>
+
+<div data-barba="container" data-barba-namespace="home">
+<main>
+  <div class="row head"><span>Year</span><span>Project</span><span>Industry</span></div>
+  <div id="list"></div>
+</main>
+</div>
+
+<footer><a href="https://www.instagram.com/gojes7_?stkn=MTNwYnVsZGs1N2dxdQ%3D%3D&utm_source=qr" target = "_blank">Instagram</a>
+        <a href="https://x.com/yi_amr58160?s=11" target = "_blank">Twitter</a>
+        <a href="https://www.linkedin.com/in/vichea-thnin-7a8883334 " target = "_blank" >LinkedIn</a>
+</footer>
+
+<a id="reel" href="project/01-numero-netherlands-x-normani/index.html" data-go><div class="t"><span id="rt">Numero Netherlands</span><i></i></div><div class="v" id="rv"><div class="cap" id="rc">Filmmaker</div></div></a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/barba.js/2.9.7/barba.umd.js"></script>
+<script>
+// Put a video URL/path in `video` for each project (mp4). Gradients are fallbacks.
+const V=[ // themed Mixkit stock clips, one per project (720p, 360p fallback). Replace with your own mp4 paths.
+  ["https://assets.mixkit.co/videos/49642/49642-720.mp4", "https://assets.mixkit.co/videos/49642/49642-360.mp4"],
+  ["https://assets.mixkit.co/videos/101368/101368-720.mp4", "https://assets.mixkit.co/videos/101368/101368-360.mp4"],
+  ["https://assets.mixkit.co/videos/35540/35540-720.mp4", "https://assets.mixkit.co/videos/35540/35540-360.mp4"],
+  ["https://assets.mixkit.co/videos/18312/18312-720.mp4", "https://assets.mixkit.co/videos/18312/18312-360.mp4"],
+  ["https://assets.mixkit.co/videos/34400/34400-720.mp4", "https://assets.mixkit.co/videos/34400/34400-360.mp4"],
+  ["https://assets.mixkit.co/videos/51295/51295-720.mp4", "https://assets.mixkit.co/videos/51295/51295-360.mp4"],
+  ["https://assets.mixkit.co/videos/20766/20766-720.mp4", "https://assets.mixkit.co/videos/20766/20766-360.mp4"],
+  ["https://assets.mixkit.co/videos/4348/4348-720.mp4", "https://assets.mixkit.co/videos/4348/4348-360.mp4"],
+  ["https://assets.mixkit.co/videos/7125/7125-720.mp4", "https://assets.mixkit.co/videos/7125/7125-360.mp4"],
+  ["https://assets.mixkit.co/videos/42840/42840-720.mp4", "https://assets.mixkit.co/videos/42840/42840-360.mp4"],
+  ["https://assets.mixkit.co/videos/30416/30416-720.mp4", "https://assets.mixkit.co/videos/30416/30416-360.mp4"],
+  ["https://assets.mixkit.co/videos/48507/48507-720.mp4", "https://assets.mixkit.co/videos/48507/48507-360.mp4"],
+  ["https://assets.mixkit.co/videos/151/151-720.mp4", "https://assets.mixkit.co/videos/151/151-360.mp4"],
+  ["https://assets.mixkit.co/videos/2074/2074-720.mp4", "https://assets.mixkit.co/videos/2074/2074-360.mp4"],
+  ["https://assets.mixkit.co/videos/4244/4244-720.mp4", "https://assets.mixkit.co/videos/4244/4244-360.mp4"]
+];
+const P=[
+["2026","Numero Netherlands x Normani","Editorial / Publishing","#0d3550,#c9772f"],
+["2026","Converse x Billie Eilish","Fashion & Footwear","#1b1b1b,#3d7a3a"],
+["2026","Genesis","Automotive","#0a0f14,#7a5b3a"],
+["2026","Culligan","Consumer Goods & Water Technology","#08324d,#5fb4d6"],
+["2025","Nylon France","Editorial / Media","#2a1030,#d04b7a"],
+["2025","Katseye x InStyle","Entertainment / Editorial","#301a10,#e0a060"],
+["2025","Eilish No.3","Fragrance & Beauty","#10251a,#9ad0a0"],
+["2024","Your Turn","Film & Commercial","#1a1a30,#5a6ad0"],
+["2024","Guest in Residence","Luxury Apparel & Fashion","#2b2620,#cbbd9e"],
+["2024","YSL x Lenny Kravitz","Entertainment / Streaming","#100c0c,#a02020"],
+["2024","Netflix - The Mother","Entertainment / Television","#0c1420,#c03030"],
+["2024","GQ x MGK x Megan Fox","Editorial / Publishing","#201010,#d08030"],
+["2023","Gentlemans Journal","Editorial / Publishing","#1c2218,#8a9a60"],
+["2023","InStyle Mexico","Film & Commercial","#301020,#f0a040"],
+["2023","Rockin' Eve","Automotive","#050a10,#3070a0"]
+].map((a,i)=>({year:a[0],title:a[1],ind:a[2],c:a[3].split(","),video:V[i]}));
+
+const F=["01-numero-netherlands-x-normani/index.html", "02-converse-x-billie-eilish/index.html", "03-genesis/index.html", "04-culligan/index.html", "05-nylon-france/index.html", "06-katseye-x-instyle/index.html", "07-eilish-no-3/index.html", "08-your-turn/index.html", "09-guest-in-residence/index.html", "10-ysl-x-lenny-kravitz/index.html", "11-netflix-the-mother/index.html", "12-gq-x-mgk-x-megan-fox/index.html", "13-gentlemans-journal/index.html", "14-instyle-mexico/index.html", "15-rockin-eve/index.html"];
+const list=document.getElementById('list'),hero=document.getElementById('hero'),rv=document.getElementById('rv');
+// page transition overlay: always driven by yPercent (100 = below screen, 0 = covering, -100 = above)
+gsap.set('#wipe',{y:0,yPercent:100});
+const wipeIn=href=>{try{sessionStorage.setItem('wipe','1')}catch(x){}gsap.to('#wipe',{yPercent:0,duration:.7,ease:'expo.inOut',onComplete:()=>{location.href=href}})};
+const wipeOut=(delay=0)=>gsap.to('#wipe',{yPercent:-100,duration:.8,ease:'expo.inOut',delay,onComplete:()=>gsap.set('#wipe',{yPercent:100})});
+
+const rt=document.getElementById('rt'),rc=document.getElementById('rc'),reel=document.getElementById('reel');
+const bg=p=>`linear-gradient(135deg,${p.c[0]},${p.c[1]} 140%)`;
+function media(p){
+  if(!p.video)return null;
+  const v=document.createElement('video');
+  Object.assign(v,{muted:true,loop:true,playsInline:true,autoplay:true});
+  // several <source>s: the browser falls through to the next one if a URL fails
+  p.video.forEach(u=>{const s=document.createElement('source');s.src=u;s.type='video/mp4';v.appendChild(s);});
+  v.play&&v.play().catch(()=>{});return v;
+}
+function layer(p){
+  const d=document.createElement('div');d.className='layer';d.style.background=bg(p);
+  const v=media(p);if(v)d.prepend(v);return d;
+}
+P.forEach((p,i)=>{
+  const r=document.createElement('a');r.className='row';r.href='project/'+F[i];
+  r.innerHTML=`<i class="fill"></i><span>${p.year}</span><span>${p.title}</span><span>${p.ind}</span><div class="ink"><span>${p.year}</span><span>${p.title}</span><span>${p.ind}</span></div>`;
+  // click previews (as before); double-click / Enter opens the project; ctrl/cmd/middle-click opens a new tab natively
+  r.onclick=e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button)return;e.preventDefault();select(i)};
+  r.ondblclick=()=>wipeIn(r.href);
+  r.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();wipeIn(r.href)}};
+  list.appendChild(r);
+});
+const rows=[...list.children];let cur=-1,busy=false,prog=null,lastNav=0;const DUR=10;
+const next=d=>select((cur+d+P.length)%P.length);
+
+function setReel(p){
+  rt.textContent=p.title;rc.textContent=i2(p);
+  rv.style.background=bg(p);
+  rv.querySelector('video')?.remove();
+  const v=media(p);if(v)rv.prepend(v);
+}
+const i2=p=>p.ind.split('/')[0].trim();
+
+function select(i){
+  if(i===cur||busy)return;busy=true;const p=P[i],prev=cur;cur=i;reel.href='project/'+F[i];
+  // fill: previous row resets, new row auto-fills left → right, then advances
+  if(prev>-1){rows[prev].classList.remove('on');gsap.set(rows[prev].querySelectorAll('.fill,.ink'),{clipPath:'inset(0 100% 0 0)'});}
+  rows[i].classList.add('on');
+  {const r=rows[i];if(r.offsetTop<list.scrollTop||r.offsetTop+r.offsetHeight>list.scrollTop+list.clientHeight)list.scrollTo({top:r.offsetTop-(list.clientHeight-r.offsetHeight)/2,behavior:'smooth'});}
+  prog&&prog.kill();
+  prog=gsap.fromTo(rows[i].querySelectorAll('.fill,.ink'),{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)',duration:DUR,ease:'none',onComplete:()=>next(1)});
+  // hero: new layer swipes bottom → top
+  const l=layer(p);hero.appendChild(l);
+  if(prev===-1){gsap.set(l,{clipPath:'inset(0% 0 0 0)'});busy=false;setReel(p);return;}
+  gsap.fromTo(l,{clipPath:'inset(100% 0 0 0)'},{clipPath:'inset(0% 0 0 0)',duration:1.1,ease:'expo.inOut',onComplete:()=>{
+    [...hero.children].slice(0,-1).forEach(e=>e.remove());busy=false;}});
+  gsap.fromTo('#reel .v',{clipPath:'inset(100% 0 0 0)'},{clipPath:'inset(0% 0 0 0)',duration:.9,ease:'expo.inOut',delay:.15,onStart:()=>setReel(p)});
+  gsap.fromTo('#rt',{yPercent:100,opacity:0},{yPercent:0,opacity:1,duration:.6,ease:'power3.out',delay:.3});
+}
+
+// scroll / swipe swaps project (down = next, up = previous), loops
+const inList=e=>e.target.closest&&e.target.closest("#list")&&list.scrollHeight>list.clientHeight+2;
+function nav(d){const t=Date.now();if(t-lastNav<900||busy)return;lastNav=t;next(d);}
+addEventListener('wheel',e=>{if(inList(e))return;if(Math.abs(e.deltaY)>4)nav(e.deltaY>0?1:-1);},{passive:true});
+let ty=0,tl=false;addEventListener('touchstart',e=>{ty=e.touches[0].clientY;tl=inList(e)},{passive:true});
+addEventListener('touchend',e=>{if(tl)return;const d=ty-e.changedTouches[0].clientY;if(Math.abs(d)>40)nav(d>0?1:-1);},{passive:true});
+addEventListener('keydown',e=>{if(e.key==='ArrowDown')nav(1);if(e.key==='ArrowUp')nav(-1);});
+
+// intro
+select(0);
+gsap.from('.row',{opacity:0,y:12,stagger:.03,duration:.6,ease:'power2.out',delay:.2});
+gsap.from('#reel',{y:40,opacity:0,duration:.8,ease:'power3.out',delay:.5});
+
+// Phnom Penh clock
+function tick(){try{document.getElementById('clock').textContent='Phnom Penh, (CAM) '+new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Phnom_Penh',hour:'numeric',minute:'2-digit'});}catch(e){}}
+tick();setInterval(tick,20000);
+
+// page transition between real pages (wipe cover → load → wipe reveal)
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[data-go]');if(!a||a.classList.contains('row'))return;
+  if(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return; // new tab/window: browser default
+  const u=new URL(a.href,location.href);
+  if(u.pathname===location.pathname&&u.search===location.search){if(!u.hash)e.preventDefault();return} // already here: no wipe
+  e.preventDefault();wipeIn(a.href);
+});
+try{if(sessionStorage.getItem('wipe')){sessionStorage.removeItem('wipe');gsap.set('#wipe',{yPercent:0});wipeOut(.1)}}catch(e){}
+// back/forward cache restores the page as it was left (overlay still covering) -> reveal it
+addEventListener('pageshow',e=>{if(e.persisted&&gsap.getProperty('#wipe','yPercent')===0)wipeOut()});
+// Barba: page transition wipe (bottom → top) for real multi-page navigation
+try{
+  barba.init({
+    prevent:()=>true, // links here are anchors in a single published file
+    transitions:[{
+      name:'wipe',
+      leave:({current})=>gsap.timeline().to('#wipe',{y:0,duration:.7,ease:'expo.inOut'}).to(current.container,{opacity:0,duration:.2},0),
+      enter:({next})=>gsap.timeline().set(next.container,{opacity:1}).to('#wipe',{y:'-100%',duration:.7,ease:'expo.inOut'}).set('#wipe',{y:'100%'})
+    }]
+  });
+}catch(e){}
+</script>
+<script>/* full screen [+] / [–]. Browsers drop full screen on every page load, so this page holds full screen and the site
+   keeps running inside a full-screen frame on top of it; links navigate the frame until [–] or Esc */
+(function(){var b=document.getElementById('fsBtn');if(!b)return;var de=document.documentElement;
+if(window.top!==window){ // inside the full-screen frame: [–] asks the outer page to leave full screen
+  b.textContent='[–]';b.setAttribute('aria-pressed','true');
+  try{parent.postMessage({fsShell:'url',href:location.href,title:document.title},'*')}catch(e){}
+  b.addEventListener('click',function(){parent.postMessage({fsShell:'exit'},'*')});return}
+var req=de.requestFullscreen||de.webkitRequestFullscreen,ex=document.exitFullscreen||document.webkitExitFullscreen;
+if(!req){b.style.display='none';return}
+var on=function(){return document.fullscreenElement||document.webkitFullscreenElement},frame=null,href=location.href;
+function open(){
+  href=location.href;frame=document.createElement('iframe');frame.src=location.href;frame.title=document.title;frame.allow='autoplay; fullscreen';
+  frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .3s';
+  frame.onload=function(){frame&&(frame.style.opacity='1');document.querySelectorAll('video').forEach(function(v){v.pause()})};
+  document.body.appendChild(frame);
+  de.style.filter='none'; // the frame applies its own theme; inverting it here as well would flip it twice
+}
+function close(){if(!frame)return;var f=frame;frame=null;de.style.filter='';
+  try{var l=localStorage.getItem('theme')==='light',t=document.getElementById('themeBtn'); // pick up a theme change made inside the frame
+    l?de.setAttribute('data-theme','light'):de.removeAttribute('data-theme');if(t){t.textContent=l?'F/1.4':'F/2.4';t.setAttribute('aria-pressed',l?'true':'false')}}catch(e){}
+  if(href.split('#')[0]!==location.href.split('#')[0]){location.href=href;return} // stay on the page the visitor ended up on
+  f.remove();document.querySelectorAll('video[autoplay],video').forEach(function(v){v.play().catch(function(){})});
+}
+addEventListener('message',function(e){var d=e.data;if(!frame||!d||e.source!==frame.contentWindow)return;
+  if(d.fsShell==='url'){href=d.href;if(d.title)document.title=d.title}
+  if(d.fsShell==='exit'&&on())ex.call(document)});
+b.addEventListener('click',function(){on()?ex.call(document):req.call(de)});
+var sync=function(){var f=!!on();b.textContent=f?'[–]':'[+]';b.setAttribute('aria-pressed',f?'true':'false');
+  if(f&&!frame)open();else if(!f&&frame)close()};
+document.addEventListener('fullscreenchange',sync);document.addEventListener('webkitfullscreenchange',sync);sync()})();</script>
+<script>(function(){var b=document.getElementById("themeBtn");if(!b)return;var r=document.documentElement;
+// F/2.4 = dark (default), F/1.4 = light; the choice is remembered across pages
+function sync(){var l=r.getAttribute("data-theme")==="light";b.textContent=l?"F/1.4":"F/2.4";b.setAttribute("aria-pressed",l?"true":"false");b.setAttribute("aria-label",l?"Switch to dark theme":"Switch to light theme")}
+b.addEventListener("click",function(){var l=r.getAttribute("data-theme")!=="light";if(l)r.setAttribute("data-theme","light");else r.removeAttribute("data-theme");try{localStorage.setItem("theme",l?"light":"dark")}catch(e){}sync()});sync()})();</script>
+<script>(function(){
+// header menu hover: letters scramble through random letters, numbers and symbols, then settle left to right (GSAP). The name/logo is left alone.
+if(!window.gsap||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+var C="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+=?/<>[]{}~^",STEP=90; // STEP = ms between random swaps (higher = slower flicker)
+document.querySelectorAll("header a:not(.name),header button").forEach(function(el){var tw=null,t="",last=0,cur=[];
+  el.addEventListener("mouseenter",function(){if(tw)return;t=el.textContent;cur=t.split("");last=0;var o={p:0};
+    tw=gsap.to(o,{p:1,duration:.9+t.length*.05,ease:"none",onUpdate:function(){var n=Math.floor(o.p*t.length),now=performance.now(),swap=now-last>=STEP;if(swap)last=now;
+      for(var i=0;i<t.length;i++){if(i<n||t[i]===" ")cur[i]=t[i];else if(swap)cur[i]=C[Math.random()*C.length|0]}el.textContent=cur.join("")},
+      onComplete:function(){el.textContent=t;tw=null}})});
+  // a click restores the real label first, so the theme / fullscreen buttons can then swap it
+  el.addEventListener("click",function(){if(tw){tw.kill();tw=null;el.textContent=t}},true);
+});})();</script>
+<script>// no ghost image when dragging a photo, video or link (the pages use drag to scroll instead)
+document.addEventListener('dragstart',function(e){if(e.target&&e.target.closest&&e.target.closest('img,video,a,#track'))e.preventDefault()});</script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
+<title>About — Han Seakvitheathnin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Druk Wide Bold';src:url("fonts/DrukWideBold.ttf") format("truetype");font-weight:700;font-display:swap}
+@font-face{font-family:'Lay Grotesk';src:url("fonts/laygrotesk-trial-regular.otf") format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:'Lay Grotesk';src:url("fonts/laygrotesk-trial-medium.otf") format("opentype");font-weight:500;font-display:swap}
+@font-face{font-family:'Lay Grotesk';src:url("fonts/laygrotesk-trial-semibold.otf") format("opentype");font-weight:600;font-display:swap}
+@font-face{font-family:'Lay Grotesk';src:url("fonts/laygrotesk-trial-bold.otf") format("opentype");font-weight:700;font-display:swap}
+@font-face{font-family:'Lay Grotesk';src:url("fonts/laygrotesk-trial-black.otf") format("opentype");font-weight:900;font-display:swap}
+:root{--bg:#050505;--cream:#e8d7b8;--display:'Druk Wide Bold','Druk Wide Trial','Archivo Black',Impact,sans-serif;--mono:'Fragment Mono',ui-monospace,Menlo,monospace;--grotesk:'Lay Grotesk',var(--mono)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:70px;scrollbar-width:none;-ms-overflow-style:none} /* page still scrolls, the bar is just hidden */
+html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0}
+body{scrollbar-width:none}
+body{background:var(--bg);color:#fff;font:13px/1.3 var(--mono);text-transform:uppercase;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
+
+
+#wipe{position:fixed;inset:0;background:#fff;mix-blend-mode:difference;z-index:50;transform:translateY(100%);pointer-events:none}
+img,video{display:block;width:100%;height:100%;object-fit:cover}
+
+/* ---- section 1: hero / about ---- */
+/* Change 64px to a larger value, like 140px */
+#s1 {
+  position: relative;
+  padding: calc(140px + env(safe-area-inset-top, 0px)) 20px 0; 
+}.tag{font-size:11px;opacity:.7;margin-bottom:10px}
+
+/* Significantly increase display text size to match the massive brutalist scale */
+.h1 {
+  font-family: var(--display);
+  font-size: clamp(26px, 8.2vw, 64px);
+  line-height: 1.2;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+}
+
+.role {
+  font-size: 11px;
+  opacity: 0.75;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  letter-spacing: 0.05em;
+}
+
+.s1-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:60px;align-items:stretch}
+.hero-img{width:100%;max-width:1094px;aspect-ratio:1094/633;background:linear-gradient(150deg,#3a4750,#bcd0d6 140%);position:relative;overflow:hidden}.s1-grid .col-r{display:flex;flex-direction:column;height:100%}
+
+/* Ensure the right column aligns to the top right */
+.top-r {
+  align-self: flex-start;
+  width: min(100%, 500px);
+  margin-top: -90px;
+  text-align: left;
+}
+
+.about-copy{font-size:10px;letter-spacing:.05em;opacity:.55;margin-bottom:14px}
+.about-txt{font-size:clamp(12px,1.05vw,16px);line-height:1.55;text-transform:uppercase;max-width:50ch;text-align:left;display:inline-block}
+.stack2{margin-top:auto;align-self:flex-end;width:min(78%,480px); transform: translateY(100px);}
+.stack2 .im{aspect-ratio:530/734;background:linear-gradient(160deg,#3d434a,#57606a 60%);position:relative;overflow:hidden}
+.hero-img img,.stack2 .im img,.faq-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.imnoise::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 30% 70%,rgba(255,255,255,.14),transparent 70%),radial-gradient(40% 60% at 75% 30%,rgba(0,0,0,.4),transparent 70%);mix-blend-mode:soft-light}
+.corner{position:absolute;left:16px;bottom:16px;font-size:10px;opacity:.7}
+
+/* ---- section 2: big image left / services + cards right ---- */
+#s2{padding:300px 20px 80px}
+.s2-grid{display:grid;grid-template-columns:minmax(0,736px) minmax(0,1fr);column-gap:clamp(30px,11.5vw,220px);align-items:stretch}
+.stage{position:relative;width:100%;aspect-ratio:736/913;overflow:hidden;background:#111}
+.stage .layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;will-change:opacity,transform}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),transparent 30%,transparent 70%,rgba(0,0,0,.45));pointer-events:none;z-index:2}
+.stage .idx{position:absolute;left:20px;bottom:18px;z-index:3;font-size:11px;letter-spacing:.1em;display:flex;gap:14px}
+.stage .mark{position:absolute;top:22px;left:0;right:0;text-align:center;z-index:3;font-family:var(--display);font-size:22px;letter-spacing:.2em}
+.right-col{display:flex;flex-direction:column;min-width:0;padding-top:52px}
+.help-label{font-size:12px;letter-spacing:.06em;margin-bottom:38px}
+.services{display:flex;flex-direction:column}
+.services .svc{display:block;cursor:default;font-family:var(--display);font-weight:700;font-size:clamp(22px,2.5vw,48px);line-height:1.15;text-transform:uppercase;margin-bottom:clamp(16px,3.3vw,64px);transition:opacity .4s cubic-bezier(.16,1,.3,1),color .4s,transform .4s cubic-bezier(.16,1,.3,1)}
+.services:hover .svc{opacity:.3}
+.services .svc:hover{opacity:1;color:var(--cream);transform:translateX(16px)}
+.testi{position:relative;margin-top:auto;margin-right:-20px;padding:4px 0;overflow:hidden;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.testi.dragging{cursor:grabbing}
+.testi-track{display:flex;width:max-content;will-change:transform}
+.testi img{-webkit-user-drag:none;pointer-events:none}
+/* blurred fade on the left edge of the auto-scroll cards */
+.testi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:clamp(70px,9vw,140px);z-index:5;pointer-events:none;
+  background:linear-gradient(to right,rgba(5,5,5,.85),rgba(5,5,5,0));
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  -webkit-mask-image:linear-gradient(to right,#000 25%,transparent);mask-image:linear-gradient(to right,#000 25%,transparent)}
+.tcard{position:relative;flex:0 0 clamp(280px,20.6vw,396px);background:#0a0a0a;border:1px solid rgba(255,255,255,.55);margin-right:-1px;padding:10px 14px 14px 11px;display:flex;flex-direction:column;gap:14px;font-family:var(--grotesk);text-transform:none}
+.tcard::before,.tcard::after{content:"";position:absolute;width:7px;height:7px;background:#e9e9e9;border:1px solid #777;z-index:2}
+.tcard::before{top:-4px;left:-4px}.tcard::after{bottom:-4px;left:-4px}
+.tcard i{position:absolute;width:7px;height:7px;background:#e9e9e9;border:1px solid #777;z-index:2;right:-4px}
+.tcard i.t{top:-4px}.tcard i.b{bottom:-4px}
+.tcard .av{display:flex;justify-content:space-between;align-items:flex-start}
+.tcard .av img{width:62px;height:77px;object-fit:cover}
+.tcard .who{text-align:right;font-family:var(--mono);font-size:11px;line-height:1.6;text-transform:uppercase;opacity:.65;padding-top:2px}
+.tcard .who b{display:block;font-weight:400;opacity:1;color:#fff}
+.tcard p{font-size:13px;line-height:1.15;text-transform:capitalize;opacity:.9;font-weight:400}
+
+/* ---- section 3: FAQ ---- */
+#s3{padding:80px 20px 120px}
+.s3-grid{display:grid;grid-template-columns:.8fr 1.6fr;gap:60px}
+.faq-side{align-self:start;position:sticky;top:110px}
+.faq-img{aspect-ratio:1/1;max-width:240px;position:relative;overflow:hidden;background:radial-gradient(70% 60% at 50% 60%,#e07a2a,#180701 80%)}
+.faq-q{margin-top:16px;font-size:14px;line-height:1.5;max-width:28ch;text-transform:none;font-family:var(--grotesk)}
+
+/* Button with corner markers */
+.btn {
+  position: relative;
+  display: inline-block;
+  margin-top: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 14px 24px;
+  font-size: 10px;
+  text-transform: uppercase;
+  background: transparent;
+  color: #fff;
+  transition: background .3s ease, border-color .3s ease;
+  letter-spacing: 0.05em;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background:
+    linear-gradient(#fff, #fff) top left / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) top right / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) bottom left / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) bottom right / 3px 3px no-repeat;
+  pointer-events: none;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}
+
+.faq-h{font-family:var(--display);font-weight:700;font-size:clamp(24px,3.2vw,48px);line-height:1.2;max-width:20ch;margin-bottom:50px}
+.acc{border-top:1px solid rgba(255,255,255,.22)}
+
+/* FAQ Accordion Hover & Expanded States */
+.aitem {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  position: relative;
+  transition: outline 0.3s ease, background 0.3s ease;
+  margin-bottom: -1px; 
+}
+
+/* FAQ Corner Markers */
+.aitem::after {
+  content: "";
+  position: absolute;
+  inset: -1px; 
+  background:
+    linear-gradient(#fff, #fff) top left / 4px 4px no-repeat,
+    linear-gradient(#fff, #fff) top right / 4px 4px no-repeat,
+    linear-gradient(#fff, #fff) bottom left / 4px 4px no-repeat,
+    linear-gradient(#fff, #fff) bottom right / 4px 4px no-repeat;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Trigger targeting box on hover and open state */
+.aitem:hover, .aitem.is-open {
+  border-bottom-color: transparent;
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.02);
+  z-index: 2;
+}
+
+.aitem:hover::after, .aitem.is-open::after {
+  opacity: 1;
+}
+
+.aitem summary {
+  list-style:none;
+  cursor:pointer;
+  padding: 24px 64px 24px 20px;
+  font-size: clamp(18px, 1.8vw, 24px);
+  text-transform:none;
+  position:relative;
+  transition:background .2s;
+  font-family:var(--grotesk);
+  font-weight: 500;
+}
+.aitem summary::-webkit-details-marker{display:none}
+
+.aitem .a{overflow:hidden;opacity:.5;font-size:24px;line-height:1.6;text-transform:none;font-family:var(--grotesk);font-weight:400}
+.aitem .ai{padding:0 64px 24px 20px}
+/* plus -> minus icon */
+.aitem .ic{position:absolute;right:22px;top:50%;width:14px;height:14px;margin-top:-7px;pointer-events:none}
+.aitem .ic::before,.aitem .ic::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1px;background:#fff}
+.aitem .ic::after{transform:rotate(90deg);transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.aitem.is-open .ic::after{transform:rotate(0deg)}
+.aitem summary{transition:padding .6s cubic-bezier(.16,1,.3,1)}
+.aitem .a p+p{margin-top:14px}
+
+/* split-text helpers (GSAP text animation) */
+.wd{display:inline-block;white-space:nowrap}
+.sw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.14em;margin-bottom:-.14em}
+.si{display:inline-block;will-change:transform}
+.hero-img img,.stack2 .im img,.faq-img img{will-change:transform}
+footer.end{padding:26px 20px 40px;display:flex;justify-content:space-between;font-size:10px;opacity:.6}
+
+@media(max-width:900px){
+ 
+ .s1-grid{grid-template-columns:1fr}
+ .s1-grid .col-r{height:auto;margin-top:24px}
+ .top-r{align-self:stretch;width:100%;text-align:left}
+ .about-txt{text-align:left}
+ .stack2{align-self:stretch;width:100%;margin-top:24px}
+ .s2-grid{grid-template-columns:1fr}
+ .right-col{padding-top:32px}
+ .testi{margin-top:40px;margin-right:-20px}
+ .tcard{flex:0 0 78vw}
+ .s3-grid{grid-template-columns:1fr}.faq-side{position:static}
+ #s1{padding-top:calc(110px + env(safe-area-inset-top,0px))}
+ .top-r{margin-top:0}
+ .stack2{transform:none}
+ #s2{padding:120px 20px 60px}
+ .stage{aspect-ratio:4/5}
+ #s3{padding:40px 20px 80px}
+ .faq-h{margin-bottom:32px}
+}
+@media(max-width:600px){
+ #s1,#s2,#s3{padding-left:12px;padding-right:12px}
+ #s1{padding-top:calc(104px + env(safe-area-inset-top,0px))}
+ .h1{letter-spacing:-1px}
+ .role{margin-bottom:24px}
+ .about-txt{font-size:12px}
+ .stack2 .im{aspect-ratio:4/5}
+ .services .svc{font-size:clamp(18px,6vw,26px);margin-bottom:14px}
+ .aitem summary{padding:18px 48px 18px 14px;font-size:17px}
+ .aitem .ai{padding:0 20px 18px 14px}
+ .aitem .a{font-size:15px}
+ .aitem .ic{right:16px}
+ .testi{margin-right:-12px}
+ .tcard{flex-basis:82vw}
+ footer.end{flex-direction:column;gap:8px;padding:24px 12px 32px}
+}
+/* ---- theme: F/2.4 = dark (default), F/1.4 = light. Light inverts the whole page, then flips photos and video back ---- */
+html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}
+html[data-theme="light"] img,html[data-theme="light"] video{filter:invert(1) hue-rotate(180deg)}
+/* ---- shared navbar (same on every page) ---- */
+header{position:fixed;top:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;gap:24px;padding:calc(22px + env(safe-area-inset-top,0px)) max(15px,env(safe-area-inset-right,0px)) 22px max(15px,env(safe-area-inset-left,0px));mix-blend-mode:difference;color:#fff;pointer-events:none;font:13px/1.3 var(--mono);text-transform:uppercase}
+header a,header span,header button{pointer-events:auto}
+.hl{display:flex;gap:clamp(24px,3.5vw,56px);white-space:nowrap}.hr{display:flex;justify-content:flex-end;gap:clamp(24px,5vw,96px);white-space:nowrap}
+.name{font-family:var(--display);font-size:13px;text-align:center;white-space:nowrap}
+header .fs,header .tb{white-space:nowrap;background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;text-transform:inherit;cursor:pointer}
+@media(max-width:1300px){.hl span:nth-child(2){display:none}}
+/* tablet / phone landscape: one row, name left, links right */
+@media(max-width:1024px){header{display:flex;align-items:baseline;gap:20px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:16px}.name{order:-1;margin-right:auto;text-align:left;font-size:12px}.hl span{display:none}.hl,.hr{gap:20px}}
+/* phone: name (+ fullscreen) on the first row, the four links spread across the second */
+@media(max-width:600px){header{flex-wrap:wrap;justify-content:space-between;row-gap:10px;column-gap:0;padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:14px;font-size:12px}.name{flex:1 1 calc(100% - 40px);font-size:11px}.hr{display:contents}header .fs{order:-1}}
+img,video{-webkit-user-drag:none;user-select:none}
+</style>
+</head>
+<body>
+<div id="wipe"></div>
+
+<header>
+  <div class="hl"><span id="clock">Phnom Penh, (CAM) 4:00 PM</span><span>Stay focused.</span><a href="../index.html" data-go>Work [15]</a></div>
+  <a class="name" href="../index.html" data-go>Han Seakvitheathnin</a>
+  <div class="hr"><button type="button" class="fs" id="fsBtn" aria-label="Toggle full screen">[+]</button><button type="button" class="tb" id="themeBtn" aria-label="Switch to light theme" aria-pressed="false">F/2.4</button><a href="../slides/index.html" data-go>Index</a><a href="../about/index.html" data-go aria-current="page">About</a><a href="../contact/index.html" data-go>Contact</a></div>
+</header>
+
+<section id="s1">
+  <div class="h1">HAN SEAK<br>VITHEATHNIN</div>
+  <div class="role">FRONTEND DESIGNER</div>
+  <div class="s1-grid">
+    <div class="hero-img imnoise"><img src="https://picsum.photos/seed/hero/1400/960" alt=""></div>
+    <div class="col-r">
+      <div class="top-r">
+        <div class="about-copy">ABOUT ME //</div>
+        <p class="about-txt">The brief was simple: capture the untamed gravity of an icon in motion for the editorial publishing space. Set against stark, brutalist architecture, this project explores the intersection of raw vulnerability and absolute power.</p>
+      </div>
+      <div class="stack2">
+        <div class="im imnoise"><img src="https://picsum.photos/seed/about/700/970" alt=""></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="s2-grid">
+    <div class="stage" id="stage">
+      <div class="layer" id="layA"></div>
+      <div class="layer" id="layB"></div>
+      <div class="idx"><span id="idxNum">01</span><span id="idxName">Frontend Design</span></div>
+    </div>
+    <div class="right-col">
+      <div class="help-label">What I can help you with</div>
+      <div class="services" id="services">
+        <div class="svc" data-img="https://picsum.photos/seed/svc1/1200/1400">Frontend Design</div>
+        <div class="svc" data-img="https://picsum.photos/seed/svc2/1200/1400">UX UI Design</div>
+        <div class="svc" data-img="https://picsum.photos/seed/svc3/1200/1400">Website Development</div>
+        <div class="svc" data-img="https://picsum.photos/seed/svc4/1200/1400">Brand Strategy</div>
+        <div class="svc" data-img="https://picsum.photos/seed/svc5/1200/1400">Motion Design</div>
+      </div>
+      <div class="testi">
+        <div class="testi-track" id="testiTrack"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="s3-grid">
+    <div class="faq-side">
+      <div class="tag">FAQs</div>
+      <div class="faq-img imnoise" style="margin-top:16px"><img src="https://picsum.photos/seed/faq/480/480" alt=""></div>
+      <p class="faq-q">Would like to know if we'd be a good fit?</p>
+      <a class="btn" href="../contact/index.html" data-go>Contact us</a>
+    </div>
+    <div>
+      <div class="faq-h">Here's what you need to consider before partnering with us.</div>
+      <div class="acc" id="acc"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="end" id="contact">
+  <span>© 2026 Han Seakvitheathnin</span>
+  <span>hello@hsvtn.com</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+const Q=[
+["Who will actually be working on our project?",["We lead every engagement from strategy, creative direction, and your primary point of contact throughout.","Depending on scope, a carefully selected team of collaborators supports on design and development. The level of care and craft stays consistent, regardless of project size."]],
+["How long do your projects usually take?",["Most sites run 3–6 weeks depending on scope, from first wireframe to final handoff.","Larger builds with custom motion or CMS work can run longer — we'll scope it together before kickoff."]],
+["How do you communicate and manage work?",["Weekly check-ins plus an async thread for day-to-day updates, so nothing sits waiting on a meeting.","You'll always know exactly where things stand and what's coming next."]],
+["What do you need to start working together?",["Brand assets, a short brief on goals and audience, and any reference sites you like.","From there we'll put together a scope and timeline before any work begins."]],
+["What happened after launch?",["A short support window is included for fixes, plus optional ongoing maintenance after that.","We stay reachable for anything that comes up once the site is live."]],
+["Can you handling branding, design development?",["Yes — branding, UI design and full front-end development are all handled in-house.","One team from first concept through to shipped code, no handoffs in between."]],
+["What is the project investment?",["Pricing depends on scope; most sites fall in a fixed range agreed on before work starts.","No hourly surprises — you'll know the number upfront."]]
+];
+const T=[
+["t1","Nicole","Tech Industry"],
+["t2","Michael","Detective"],
+["t3","Sara","Fashion"],
+["t4","David","Automotive"],
+["t5","Amara","Beauty"]
+];
+const card=t=>`<div class="tcard"><i class="t"></i><i class="b"></i><div class="av"><img src="https://picsum.photos/seed/${t[0]}/124/154" alt=""><div class="who"><b>${t[1]}</b>${t[2]}</div></div><p>The brief was simple: capture the untamed gravity of an icon in motion for the editorial publishing space. This project explores raw vulnerability and absolute power.</p></div>`;
+document.getElementById('testiTrack').innerHTML = T.map(card).join('') + T.map(card).join('');
+
+// service hover -> crossfade big image on the left
+(function(){
+  const layers=[document.getElementById('layA'),document.getElementById('layB')];
+  const links=[...document.querySelectorAll('#services .svc')];
+  const num=document.getElementById('idxNum'),name=document.getElementById('idxName');
+  let top=0,cur=-1;
+  links.forEach(a=>{const i=new Image();i.src=a.dataset.img;}); // preload
+  function show(i){
+    if(i===cur) return;
+    const first=cur<0; cur=i;
+    const nxt=layers[1-top], prev=layers[top]; top=1-top;
+    nxt.style.backgroundImage=`url("${links[i].dataset.img}")`;
+    nxt.style.zIndex=1; prev.style.zIndex=0;
+    links.forEach((l,k)=>l.classList.toggle('on',k===i));
+    num.textContent=String(i+1).padStart(2,'0'); name.textContent=links[i].textContent;
+    gsap.killTweensOf([nxt,prev]);
+    gsap.fromTo(nxt,{opacity:0,scale:1.08,clipPath:'inset(0 0 100% 0)'},{opacity:1,scale:1,clipPath:'inset(0 0 0% 0)',duration:first?.01:.7,ease:'power3.out'});
+    gsap.to(prev,{opacity:0,duration:.7,delay:.1,ease:'power1.out'});
+  }
+  links.forEach((a,i)=>{
+    a.addEventListener('mouseenter',()=>show(i));
+    a.addEventListener('click',()=>show(i)); // touch screens have no hover
+  });
+  show(0);
+})();
+
+document.getElementById('acc').innerHTML = Q.map((q,i)=>`
+ <details class="aitem">
+   <summary>${q[0]}<i class="ic"></i></summary>
+   <div class="a"><div class="ai">${q[1].map(p=>`<p>${p}</p>`).join('')}</div></div>
+ </details>`).join('');
+
+// page transition overlay: always driven by yPercent (100 = below screen, 0 = covering, -100 = above)
+gsap.set('#wipe',{y:0,yPercent:100});
+const wipeIn=href=>{try{sessionStorage.setItem('wipe','1')}catch(x){}gsap.to('#wipe',{yPercent:0,duration:.7,ease:'expo.inOut',onComplete:()=>{location.href=href}})};
+const wipeOut=(delay=0)=>gsap.to('#wipe',{yPercent:-100,duration:.8,ease:'expo.inOut',delay,onComplete:()=>gsap.set('#wipe',{yPercent:100})});
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[data-go]');if(!a||a.classList.contains('row'))return;
+  if(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return; // new tab/window: browser default
+  const u=new URL(a.href,location.href);
+  if(u.pathname===location.pathname&&u.search===location.search){if(!u.hash)e.preventDefault();return} // already here: no wipe
+  e.preventDefault();wipeIn(a.href);
+});
+try{if(sessionStorage.getItem('wipe')){sessionStorage.removeItem('wipe');gsap.set('#wipe',{yPercent:0});wipeOut(.1)}}catch(e){}
+// back/forward cache restores the page as it was left (overlay still covering) -> reveal it
+addEventListener('pageshow',e=>{if(e.persisted&&gsap.getProperty('#wipe','yPercent')===0)wipeOut()});
+
+// =====================  MOTION  =====================
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+gsap.registerPlugin(ScrollTrigger);
+const $=(q,c=document)=>c.querySelector(q),$$=(q,c=document)=>[...c.querySelectorAll(q)];
+
+// auto-scroll cards: GSAP ticker keeps it moving (hover never stops it) + drag left/right
+(function(){
+  const box=document.querySelector('.testi'),track=document.getElementById('testiTrack');
+  if(!box||!track)return;
+  const SPEED=(typeof RM!=='undefined'&&RM)?0:60;   // px per second (auto-scroll)
+  let x=0,half=0,dragging=false,startX=0,startPos=0,vel=0,lastX=0,lastT=0;
+  const set=gsap.quickSetter(track,'x','px');
+  const measure=()=>{half=track.offsetWidth/2};
+  measure();addEventListener('resize',measure);addEventListener('load',measure);
+  const wrap=v=>half?gsap.utils.wrap(-half,0,v):v;
+  gsap.ticker.add((t,dt)=>{
+    if(!half)measure();
+    const s=dt/1000;
+    if(!dragging){
+      // momentum from a flick eases back into the constant auto-scroll speed
+      vel+=(-SPEED-vel)*Math.min(1,s*4);
+      x=wrap(x+vel*s);
+    }
+    set(x);
+  });
+  box.addEventListener('pointerdown',e=>{
+    if(e.button)return;
+    dragging=true;startX=lastX=e.clientX;startPos=x;vel=0;lastT=performance.now();
+    box.classList.add('dragging');box.setPointerCapture(e.pointerId);
+  });
+  box.addEventListener('pointermove',e=>{
+    if(!dragging)return;
+    x=wrap(startPos+(e.clientX-startX));
+    const now=performance.now(),dt=(now-lastT)/1000;
+    if(dt>0){vel=vel*.6+((e.clientX-lastX)/dt)*.4;}
+    lastX=e.clientX;lastT=now;
+  });
+  const end=e=>{
+    if(!dragging)return;dragging=false;box.classList.remove('dragging');
+    try{box.releasePointerCapture(e.pointerId)}catch(_){}
+    if(performance.now()-lastT>80)vel=0; // held still before release: no flick
+    vel=Math.max(-2500,Math.min(2500,vel));
+  };
+  box.addEventListener('pointerup',end);
+  box.addEventListener('pointercancel',end);
+})();
+
+// split an element's text into words (or characters) wrapped in masks; returns the inner spans to animate
+function split(el,chars){
+  el.setAttribute('aria-label',el.textContent.replace(/\s+/g,' ').trim());
+  const out=[];
+  (function walk(node){
+    [...node.childNodes].forEach(n=>{
+      if(n.nodeType===3){
+        const frag=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(tok=>{
+          if(!tok)return;
+          if(/^\s+$/.test(tok)){frag.appendChild(document.createTextNode(' '));return;}
+          const wd=document.createElement('span');wd.className='wd';wd.setAttribute('aria-hidden','true');
+          (chars?[...tok]:[tok]).forEach(u=>{
+            const sw=document.createElement('span'),si=document.createElement('span');
+            sw.className='sw';si.className='si';si.textContent=u;sw.appendChild(si);wd.appendChild(sw);out.push(si);
+          });
+          frag.appendChild(wd);
+        });
+        n.replaceWith(frag);
+      }else if(n.nodeType===1&&n.tagName!=='BR')walk(n);
+    });
+  })(el);
+  return out;
+}
+
+/* ---- smooth, slower page scroll (Lenis) ---- */
+const SCROLL_SPEED=0.6;   // wheel speed: 1 = normal, 0.6 = slower, 0.4 = much slower
+const SCROLL_SMOOTH=0.07; // glide: lower = floatier / longer easing (0.05 - 0.12)
+if(!RM&&window.Lenis){
+  const lenis=new Lenis({wheelMultiplier:SCROLL_SPEED,touchMultiplier:1,lerp:SCROLL_SMOOTH});
+  lenis.on('scroll',ScrollTrigger.update);
+  gsap.ticker.add(t=>lenis.raf(t*1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+if(!RM){
+  const range=(trigger,start='top bottom',end='bottom top')=>({trigger,start,end,scrub:.6});
+
+  /* ---- text: hero intro ---- */
+  const h1c=split($('.h1'),true),aw=split($('.about-txt'));
+  gsap.set([...h1c,...aw],{yPercent:115});
+  gsap.to(h1c,{yPercent:0,duration:1.2,ease:'expo.out',stagger:.035,delay:.25});
+  gsap.to(aw,{yPercent:0,duration:1,ease:'expo.out',stagger:.012,delay:.75});
+  gsap.from('#s1 .role,#s1 .about-copy',{y:40,opacity:0,duration:1,ease:'expo.out',stagger:.06,delay:.35});
+  // hero images: reveal from top to bottom
+  gsap.fromTo('#s1 .hero-img,#s1 .stack2 .im',{clipPath:'inset(0% 0% 100% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:1.4,ease:'expo.inOut',stagger:.15,delay:.4,clearProps:'clipPath'});
+
+  /* ---- text: on scroll ---- */
+  gsap.from(split($('.help-label')),{yPercent:115,duration:.9,ease:'expo.out',scrollTrigger:{trigger:'#s2',start:'top 70%',once:true}});
+  gsap.from($$('#services .svc').flatMap(a=>split(a)),{yPercent:115,duration:1.1,ease:'expo.out',stagger:.05,scrollTrigger:{trigger:'#services',start:'top 88%',once:true}});
+  // FAQ heading fills in word by word as you scroll
+  gsap.fromTo(split($('.faq-h')),{opacity:.12},{opacity:1,stagger:.12,ease:'none',scrollTrigger:{trigger:'.faq-h',start:'top 88%',end:'bottom 55%',scrub:true}});
+  gsap.from('.faq-side > *',{y:30,opacity:0,duration:.9,ease:'power3.out',stagger:.08,scrollTrigger:{trigger:'#s3',start:'top 75%',once:true}});
+  gsap.from('.aitem',{y:30,opacity:0,duration:.9,ease:'power3.out',stagger:.07,clearProps:'transform,opacity',scrollTrigger:{trigger:'#acc',start:'top 90%',once:true}});
+
+  /* ---- parallax ---- */
+  // images drift inside their frames (scaled up so edges never show)
+  $$('.hero-img img,.stack2 .im img,.faq-img img').forEach(img=>{
+    gsap.fromTo(img,{yPercent:-9,scale:1.22},{yPercent:9,scale:1.22,ease:'none',scrollTrigger:range(img.parentElement)});
+  });
+  // layers move at different speeds
+  gsap.to('.h1',{y:-90,ease:'none',scrollTrigger:range('#s1','top top')});
+  gsap.to('.top-r',{y:-50,ease:'none',scrollTrigger:range('#s1','top top')});
+  gsap.fromTo('.stack2',{y:100},{y:-30,ease:'none',scrollTrigger:range('#s1','top top')});
+  gsap.fromTo('.stage',{y:70},{y:-50,ease:'none',scrollTrigger:range('#s2')});
+
+  addEventListener('load',()=>ScrollTrigger.refresh());
+}
+
+// =====================  FAQ accordion (smooth height + icon + staggered answer)  =====================
+document.getElementById('acc').addEventListener('click',e=>{
+  const sum=e.target.closest('summary');if(!sum)return;
+  e.preventDefault(); // we drive open/close ourselves so it can animate
+  toggle(sum.parentElement);
+});
+function toggle(d){
+  const a=d.querySelector('.a'),ps=$$('p',a),opening=!d.classList.contains('is-open'),k=RM?0:1;
+  gsap.killTweensOf([a,...ps]);
+  d.classList.toggle('is-open',opening);
+  if(opening){
+    const from=d.open?a.offsetHeight:0;            // pick up mid-animation if interrupted
+    d.open=true;
+    gsap.set(a,{height:'auto'});const to=a.offsetHeight;
+    gsap.fromTo(a,{height:from},{height:to,duration:.85*k,ease:'power4.inOut',onComplete:()=>{gsap.set(a,{height:'auto'});ScrollTrigger.refresh();}});
+    gsap.fromTo(ps,{y:18,opacity:0},{y:0,opacity:1,duration:.8*k,delay:.15*k,stagger:.09*k,ease:'power3.out'});
+  }else{
+    gsap.to(ps,{opacity:0,y:-8,duration:.25*k,ease:'power2.in'});
+    gsap.to(a,{height:0,duration:.65*k,ease:'power4.inOut',onComplete:()=>{d.open=false;gsap.set(a,{height:'auto'});ScrollTrigger.refresh();}});
+  }
+}
+
+function tick(){
+  try{document.getElementById('clock').textContent='Phnom Penh, (CAM) '+new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Phnom_Penh',hour:'numeric',minute:'2-digit'});}catch(e){}
+}
+tick();setInterval(tick,20000);
+</script>
+<script>/* full screen [+] / [–]. Browsers drop full screen on every page load, so this page holds full screen and the site
+   keeps running inside a full-screen frame on top of it; links navigate the frame until [–] or Esc */
+(function(){var b=document.getElementById('fsBtn');if(!b)return;var de=document.documentElement;
+if(window.top!==window){ // inside the full-screen frame: [–] asks the outer page to leave full screen
+  b.textContent='[–]';b.setAttribute('aria-pressed','true');
+  try{parent.postMessage({fsShell:'url',href:location.href,title:document.title},'*')}catch(e){}
+  b.addEventListener('click',function(){parent.postMessage({fsShell:'exit'},'*')});return}
+var req=de.requestFullscreen||de.webkitRequestFullscreen,ex=document.exitFullscreen||document.webkitExitFullscreen;
+if(!req){b.style.display='none';return}
+var on=function(){return document.fullscreenElement||document.webkitFullscreenElement},frame=null,href=location.href;
+function open(){
+  href=location.href;frame=document.createElement('iframe');frame.src=location.href;frame.title=document.title;frame.allow='autoplay; fullscreen';
+  frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .3s';
+  frame.onload=function(){frame&&(frame.style.opacity='1');document.querySelectorAll('video').forEach(function(v){v.pause()})};
+  document.body.appendChild(frame);
+  de.style.filter='none'; // the frame applies its own theme; inverting it here as well would flip it twice
+}
+function close(){if(!frame)return;var f=frame;frame=null;de.style.filter='';
+  try{var l=localStorage.getItem('theme')==='light',t=document.getElementById('themeBtn'); // pick up a theme change made inside the frame
+    l?de.setAttribute('data-theme','light'):de.removeAttribute('data-theme');if(t){t.textContent=l?'F/1.4':'F/2.4';t.setAttribute('aria-pressed',l?'true':'false')}}catch(e){}
+  if(href.split('#')[0]!==location.href.split('#')[0]){location.href=href;return} // stay on the page the visitor ended up on
+  f.remove();document.querySelectorAll('video[autoplay],video').forEach(function(v){v.play().catch(function(){})});
+}
+addEventListener('message',function(e){var d=e.data;if(!frame||!d||e.source!==frame.contentWindow)return;
+  if(d.fsShell==='url'){href=d.href;if(d.title)document.title=d.title}
+  if(d.fsShell==='exit'&&on())ex.call(document)});
+b.addEventListener('click',function(){on()?ex.call(document):req.call(de)});
+var sync=function(){var f=!!on();b.textContent=f?'[–]':'[+]';b.setAttribute('aria-pressed',f?'true':'false');
+  if(f&&!frame)open();else if(!f&&frame)close()};
+document.addEventListener('fullscreenchange',sync);document.addEventListener('webkitfullscreenchange',sync);sync()})();</script>
+<script>(function(){var b=document.getElementById("themeBtn");if(!b)return;var r=document.documentElement;
+// F/2.4 = dark (default), F/1.4 = light; the choice is remembered across pages
+function sync(){var l=r.getAttribute("data-theme")==="light";b.textContent=l?"F/1.4":"F/2.4";b.setAttribute("aria-pressed",l?"true":"false");b.setAttribute("aria-label",l?"Switch to dark theme":"Switch to light theme")}
+b.addEventListener("click",function(){var l=r.getAttribute("data-theme")!=="light";if(l)r.setAttribute("data-theme","light");else r.removeAttribute("data-theme");try{localStorage.setItem("theme",l?"light":"dark")}catch(e){}sync()});sync()})();</script>
+<script>(function(){
+// header menu hover: letters scramble through random letters, numbers and symbols, then settle left to right (GSAP). The name/logo is left alone.
+if(!window.gsap||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+var C="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+=?/<>[]{}~^",STEP=90; // STEP = ms between random swaps (higher = slower flicker)
+document.querySelectorAll("header a:not(.name),header button").forEach(function(el){var tw=null,t="",last=0,cur=[];
+  el.addEventListener("mouseenter",function(){if(tw)return;t=el.textContent;cur=t.split("");last=0;var o={p:0};
+    tw=gsap.to(o,{p:1,duration:.9+t.length*.05,ease:"none",onUpdate:function(){var n=Math.floor(o.p*t.length),now=performance.now(),swap=now-last>=STEP;if(swap)last=now;
+      for(var i=0;i<t.length;i++){if(i<n||t[i]===" ")cur[i]=t[i];else if(swap)cur[i]=C[Math.random()*C.length|0]}el.textContent=cur.join("")},
+      onComplete:function(){el.textContent=t;tw=null}})});
+  // a click restores the real label first, so the theme / fullscreen buttons can then swap it
+  el.addEventListener("click",function(){if(tw){tw.kill();tw=null;el.textContent=t}},true);
+});})();</script>
+<script>// no ghost image when dragging a photo, video or link (the pages use drag to scroll instead)
+document.addEventListener('dragstart',function(e){if(e.target&&e.target.closest&&e.target.closest('img,video,a,#track'))e.preventDefault()});</script>
+</body>
+</html>
