@@ -1,33 +1,3 @@
-/* full screen [+] / [–]. Browsers drop full screen on every page load, so this page holds full screen and the site
-   keeps running inside a full-screen frame on top of it; links navigate the frame until [–] or Esc */
-(function(){var b=document.getElementById('fsBtn');if(!b)return;var de=document.documentElement;
-if(window.top!==window){ // inside the full-screen frame: [–] asks the outer page to leave full screen
-  b.textContent='[–]';b.setAttribute('aria-pressed','true');
-  try{parent.postMessage({fsShell:'url',href:location.href,title:document.title},'*')}catch(e){}
-  b.addEventListener('click',function(){parent.postMessage({fsShell:'exit'},'*')});return}
-var req=de.requestFullscreen||de.webkitRequestFullscreen,ex=document.exitFullscreen||document.webkitExitFullscreen;
-if(!req){b.style.display='none';return}
-var on=function(){return document.fullscreenElement||document.webkitFullscreenElement},frame=null,href=location.href;
-function open(){
-  href=location.href;frame=document.createElement('iframe');frame.src=location.href;frame.title=document.title;frame.allow='autoplay; fullscreen';
-  frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .3s';
-  frame.onload=function(){frame&&(frame.style.opacity='1');document.querySelectorAll('video').forEach(function(v){v.pause()})};
-  document.body.appendChild(frame);
-  de.style.filter='none'; // the frame applies its own theme; inverting it here as well would flip it twice
-}
-function close(){if(!frame)return;var f=frame;frame=null;de.style.filter='';
-  try{var l=localStorage.getItem('theme')==='light',t=document.getElementById('themeBtn'); // pick up a theme change made inside the frame
-    l?de.setAttribute('data-theme','light'):de.removeAttribute('data-theme');if(t){t.textContent=l?'F/1.4':'F/2.4';t.setAttribute('aria-pressed',l?'true':'false')}}catch(e){}
-  if(href.split('#')[0]!==location.href.split('#')[0]){location.href=href;return} // stay on the page the visitor ended up on
-  f.remove();document.querySelectorAll('video[autoplay],video').forEach(function(v){v.play().catch(function(){})});
-}
-addEventListener('message',function(e){var d=e.data;if(!frame||!d||e.source!==frame.contentWindow)return;
-  if(d.fsShell==='url'){href=d.href;if(d.title)document.title=d.title}
-  if(d.fsShell==='exit'&&on())ex.call(document)});
-b.addEventListener('click',function(){on()?ex.call(document):req.call(de)});
-var sync=function(){var f=!!on();b.textContent=f?'[–]':'[+]';b.setAttribute('aria-pressed',f?'true':'false');
-  if(f&&!frame)open();else if(!f&&frame)close()};
-document.addEventListener('fullscreenchange',sync);document.addEventListener('webkitfullscreenchange',sync);sync()})();
 /* every project: drives the (NN) number and the "next project" card */
 const REG=[{"s": "01-numero-netherlands-x-normani", "t": "Numero Netherlands x Normani", "c": ["#0d3550", "#c9772f"], "a": "https://images.unsplash.com/photo-1632765866070-3fadf25d3d5b?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "02-converse-x-billie-eilish", "t": "Converse x Billie Eilish", "c": ["#1b1b1b", "#3d7a3a"], "a": "https://images.unsplash.com/photo-1709010499458-74a6b5f6188f?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "03-genesis", "t": "Genesis", "c": ["#0a0f14", "#7a5b3a"], "a": "https://images.unsplash.com/photo-1655837425341-b59fc33c5898?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "04-culligan", "t": "Culligan", "c": ["#08324d", "#5fb4d6"], "a": "https://images.unsplash.com/photo-1519455953755-af066f52f1a6?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "05-nylon-france", "t": "Nylon France", "c": ["#2a1030", "#d04b7a"], "a": "https://images.unsplash.com/photo-1671485429799-249e8acb2ee6?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "06-katseye-x-instyle", "t": "Katseye x InStyle", "c": ["#301a10", "#e0a060"], "a": "https://images.unsplash.com/photo-1767570280633-b8446dcbd80e?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "07-eilish-no-3", "t": "Eilish No.3", "c": ["#10251a", "#9ad0a0"], "a": "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "08-your-turn", "t": "Your Turn", "c": ["#1a1a30", "#5a6ad0"], "a": "https://images.unsplash.com/photo-1485846147915-69f12fbd03b9?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "09-guest-in-residence", "t": "Guest in Residence", "c": ["#2b2620", "#cbbd9e"], "a": "https://images.unsplash.com/photo-1574201635302-388dd92a4c3f?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "10-ysl-x-lenny-kravitz", "t": "YSL x Lenny Kravitz", "c": ["#100c0c", "#a02020"], "a": "https://images.unsplash.com/photo-1592245734204-6561336cbc6f?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "11-netflix-the-mother", "t": "Netflix - The Mother", "c": ["#0c1420", "#c03030"], "a": "https://images.unsplash.com/photo-1519381950710-20a66031fe2a?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "12-gq-x-mgk-x-megan-fox", "t": "GQ x MGK x Megan Fox", "c": ["#201010", "#d08030"], "a": "https://images.unsplash.com/photo-1770543774604-627428e99231?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "13-gentlemans-journal", "t": "Gentlemans Journal", "c": ["#1c2218", "#8a9a60"], "a": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "14-instyle-mexico", "t": "InStyle Mexico", "c": ["#301020", "#f0a040"], "a": "https://images.unsplash.com/photo-1604274859081-898bd2972f55?auto=format&fit=crop&w=900&h=1200&q=75"}, {"s": "15-rockin-eve", "t": "Rockin' Eve", "c": ["#050a10", "#3070a0"], "a": "https://images.unsplash.com/photo-1539136831565-c85f368448a3?auto=format&fit=crop&w=900&h=1200&q=75"}];
 
@@ -54,7 +24,8 @@ let cur=null,M=null; // M = the card that grows into the next hero (lives on <bo
 /* ---------- panels ---------- */
 function html(P){
   const m=P.media||{},i=Math.max(0,REG.findIndex(r=>r.t===P.title)),n=REG[(i+1)%REG.length]; // last project loops to the first
-  const ph=(k,a=0,inner='')=>{const f=m[k],v=f&&/\.(mp4|webm)$/i.test(f);return `<div class="ph" style="--g:${grad(P.c,a)}">${f?(v?`<video src="${f}" muted loop autoplay playsinline></video>`:`<img src="${f}" alt="" draggable="false">`):''}${inner}</div>`};
+  // only the intro image loads straight away; the rest load as they near the screen, videos start when they scroll into view
+  const ph=(k,a=0,inner='')=>{const f=m[k],v=f&&/\.(mp4|webm)$/i.test(f),eager=k==='a',ld=eager?'fetchpriority="high"':'loading="lazy"';return `<div class="ph" style="--g:${grad(P.c,a)}">${f?(v?`<video data-src="${f}" muted loop playsinline preload="none"></video>`:`<img src="${f}" alt="" draggable="false" decoding="async" ${ld}>`):''}${inner}</div>`};
   return [
 `<section class="p intro">${ph('a',0,`<div class="big">${P.word}</div>`)}<div class="txt"><div class="yr">${P.year}</div><h1>${P.title}</h1><div class="ind">${P.ind}</div><div class="pnum">(${pad(i+1)})</div><p class="brief">${P.brief}</p><div class="hint">Drag / scroll</div></div></section>`,
 `<section class="p stk about">${ph('c',-30,`<div class="abt"><div class="big2">About</div><p class="sm">${P.about}</p></div>`)}</section>`,
@@ -65,7 +36,7 @@ function html(P){
 `<section class="p stk">${ph('j',-20)}</section>`,
 `<section class="p stk top">${ph('k',50)}</section>`,
 `<section class="p cred"><h2>Credits</h2><dl>${P.credits.map(c=>`<div><dt>${c[0]}</dt><dd>${c[1]}</dd></div>`).join('')}</dl><div class="yr">${P.year} // ${P.ind}</div></section>`,
-`<section class="p nextcard"><a href="../${n.s}/index.html" data-barba-link><small>Scroll to navigate to the next project</small><div class="ncbox ph" style="--g:${grad(n.c)}"><img src="${n.a}" alt="" draggable="false"><b>${n.t}</b></div></a></section>`
+`<section class="p nextcard"><a href="../${n.s}/index.html" data-barba-link><small>Scroll to navigate to the next project</small><div class="ncbox ph" style="--g:${grad(n.c)}"><img src="${n.a}" alt="" draggable="false" decoding="async" loading="lazy"><b>${n.t}</b></div></a></section>`
   ].join('');
 }
 
@@ -77,6 +48,11 @@ function mount(container,P,o={}){
   const ci=$('.ci',container),S={t:0,x:0};
   let max=0,st_,pt,pull=0,endSince=0,busy=false,down=false,frozen=false,sx=0,sy=0,ax=0,s0=0,lx=0,vel=0;
   const ac=new AbortController(),on=(t,e,f,op)=>t.addEventListener(e,f,{...op,signal:ac.signal});
+  // videos: fetch when within a screen width of view, pause when off screen
+  const vids=[...track.querySelectorAll('video[data-src]')],io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;
+    if(e.isIntersecting){if(!v.src)v.src=v.dataset.src;v.play().catch(()=>{})}else v.pause()}),{rootMargin:'0px 100% 0px 100%'}):null;
+  vids.forEach(v=>io?io.observe(v):(v.src=v.dataset.src,v.autoplay=true));
+  ac.signal.addEventListener('abort',()=>io&&io.disconnect());
   const measure=()=>{max=Math.max(0,track.scrollWidth-innerWidth)},out=v=>v<0||v>max;
   measure();on(window,'load',measure);on(window,'resize',measure);requestAnimationFrame(measure);
   gsap.set(track,{transformOrigin:'50% 50%'});
@@ -151,5 +127,3 @@ try{barba.init({
 })}catch(e){}
 tick();setInterval(tick,20000);
 
-// no ghost image when dragging a photo, video or link (the pages use drag to scroll instead)
-document.addEventListener('dragstart',function(e){if(e.target&&e.target.closest&&e.target.closest('img,video,a,#track'))e.preventDefault()});

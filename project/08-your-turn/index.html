@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
+<link rel="icon" href="data:,">
 <title>Your Turn — Han Seakvitheathnin</title>
-<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Archivo+Black&display=swap" rel="stylesheet">
+<link rel="preload" href="../../fonts/FragmentMono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../fonts/DrukWideBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
 <link rel="stylesheet" href="../project.css">
 </head>
 <body>
@@ -21,25 +24,9 @@
 <div id="count"></div>
 </main>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/barba.js/2.9.7/barba.umd.js"></script>
+<script src="../../vendor/gsap.min.js"></script>
 <script>window.PROJECT={"year":"2024","title":"Your Turn","ind":"Film & Commercial","c":["#1a1a30","#5a6ad0"],"word":"Turn","role":"Short Film","brief":"A short about the moment before a decision. Two characters, one room, and a camera that never quite settles.","about":"Our team has shot many projects for Your Turn. We work with modern digital cameras and old lenses, and when a frame surprises us we keep it.","client":"Your Turn","sub":"Film & Commercial","credits":[["Client","Your Turn"],["Year","2024"],["Industry","Film & Commercial"],["Role","Short Film"],["Director","Han Seakvitheathnin"],["Location","Phnom Penh"]],"media":{"a":"https://images.unsplash.com/photo-1485846147915-69f12fbd03b9?auto=format&fit=crop&w=1000&h=1300&q=75","b":"https://images.unsplash.com/photo-1485846147915-69f12fbd03b9?auto=format&fit=crop&w=1000&h=1300&q=75","c":"https://images.unsplash.com/photo-1574882559683-c27d3f9ab471?auto=format&fit=crop&w=1000&h=1300&q=75","d":"https://images.unsplash.com/photo-1574882559683-c27d3f9ab471?auto=format&fit=crop&w=1000&h=1300&q=75","e":"https://images.unsplash.com/photo-1574712255236-ce5bf8395083?auto=format&fit=crop&w=1000&h=1300&q=75","f":"https://images.unsplash.com/photo-1490971588422-52f6262a237a?auto=format&fit=crop&w=1000&h=1300&q=75","g":"https://images.unsplash.com/photo-1612548403247-aa2873e9422d?auto=format&fit=crop&w=1000&h=1300&q=75","h":"https://images.unsplash.com/photo-1574712255236-ce5bf8395083?auto=format&fit=crop&w=1000&h=1300&q=75","i":"https://assets.mixkit.co/videos/49642/49642-720.mp4","j":"https://images.unsplash.com/photo-1696332415657-9fbe802a8875?auto=format&fit=crop&w=1000&h=1300&q=75","k":"https://images.unsplash.com/photo-1619099619226-f96e319e3732?auto=format&fit=crop&w=1000&h=1300&q=75","l":"https://images.unsplash.com/photo-1490971588422-52f6262a237a?auto=format&fit=crop&w=1000&h=1300&q=75"},"total":15,"next":{"title":"Guest in Residence","href":"../09-guest-in-residence/index.html"}};</script>
 <script src="../project.js"></script>
-<script>(function(){var b=document.getElementById("themeBtn");if(!b)return;var r=document.documentElement;
-// F/2.4 = dark (default), F/1.4 = light; the choice is remembered across pages
-function sync(){var l=r.getAttribute("data-theme")==="light";b.textContent=l?"F/1.4":"F/2.4";b.setAttribute("aria-pressed",l?"true":"false");b.setAttribute("aria-label",l?"Switch to dark theme":"Switch to light theme")}
-b.addEventListener("click",function(){var l=r.getAttribute("data-theme")!=="light";if(l)r.setAttribute("data-theme","light");else r.removeAttribute("data-theme");try{localStorage.setItem("theme",l?"light":"dark")}catch(e){}sync()});sync()})();</script>
-<script>(function(){
-// header menu hover: letters scramble through random letters, numbers and symbols, then settle left to right (GSAP). The name/logo is left alone.
-if(!window.gsap||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
-var C="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+=?/<>[]{}~^",STEP=90; // STEP = ms between random swaps (higher = slower flicker)
-document.querySelectorAll("header a:not(.name),header button").forEach(function(el){var tw=null,t="",last=0,cur=[];
-  el.addEventListener("mouseenter",function(){if(tw)return;t=el.textContent;cur=t.split("");last=0;var o={p:0};
-    tw=gsap.to(o,{p:1,duration:.9+t.length*.05,ease:"none",onUpdate:function(){var n=Math.floor(o.p*t.length),now=performance.now(),swap=now-last>=STEP;if(swap)last=now;
-      for(var i=0;i<t.length;i++){if(i<n||t[i]===" ")cur[i]=t[i];else if(swap)cur[i]=C[Math.random()*C.length|0]}el.textContent=cur.join("")},
-      onComplete:function(){el.textContent=t;tw=null}})});
-  // a click restores the real label first, so the theme / fullscreen buttons can then swap it
-  el.addEventListener("click",function(){if(tw){tw.kill();tw=null;el.textContent=t}},true);
-});})();</script>
+<script src="../../js/site.js"></script>
 </body>
 </html>

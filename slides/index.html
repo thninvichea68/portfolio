@@ -4,10 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
+<link rel="icon" href="data:,">
 <title>Slides — Han Seakvitheathnin</title>
-<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Archivo+Black&display=swap" rel="stylesheet">
+<link rel="preload" href="../fonts/FragmentMono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/DrukWideBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
 <style>
-@font-face{font-family:'Druk Wide Bold';src:url("../fonts/DrukWideBold.ttf") format("truetype");font-weight:700;font-display:swap}
+@font-face{font-family:'Fragment Mono';src:url("../fonts/FragmentMono-latin.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Druk Wide Bold';src:url("../fonts/DrukWideBold.woff2") format("woff2");font-weight:700;font-display:swap}
 :root{--display:'Druk Wide Bold','Druk Wide Trial','Druk Wide','Archivo Black',Impact,sans-serif;--mono:'Fragment Mono',ui-monospace,Menlo,monospace;--gap:20px;--cw:calc((100vw - 30px - 3 * var(--gap)) / 4)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#000;color:#fff;font:15px/1 var(--mono);text-transform:uppercase;overflow:hidden;overscroll-behavior:none}
@@ -59,7 +63,7 @@ img,video{-webkit-user-drag:none;user-select:none}
 </header>
 <div id="track"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="../vendor/gsap.min.js"></script>
 <script>
 // video: path relative to this file, e.g. "../videos/numero.mp4"
 const P=[
@@ -84,8 +88,9 @@ for(let c=0;c<COPIES;c++){
     if(c>0){d.setAttribute('aria-hidden','true');d.tabIndex=-1;}
     // placeholder image (swap the seed URL for your own file, e.g. "../images/numero.jpg")
     const IMG=["https://images.unsplash.com/photo-1632765866070-3fadf25d3d5b?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1709010499458-74a6b5f6188f?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1655837425341-b59fc33c5898?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1519455953755-af066f52f1a6?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1671485429799-249e8acb2ee6?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1767570280633-b8446dcbd80e?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1485846147915-69f12fbd03b9?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1574201635302-388dd92a4c3f?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1592245734204-6561336cbc6f?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1519381950710-20a66031fe2a?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1770543774604-627428e99231?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1604274859081-898bd2972f55?auto=format&fit=crop&w=900&h=1200&q=75","https://images.unsplash.com/photo-1539136831565-c85f368448a3?auto=format&fit=crop&w=900&h=1200&q=75"];
-    const img=IMG[i];
-    d.innerHTML=`<div class="meta"><span>${p.title}</span><span>${p.year}</span></div><div class="box"><div class="media" style="background:linear-gradient(160deg,${p.c[0]},${p.c[1]} 150%)"><img src="${img}" alt="" draggable="false"></div><div class="ui"><b></b><b></b><b></b><b></b><span>[View project]</span></div></div>`;
+    // 450px or 900px wide depending on card size and screen density; cards load as they near the screen
+    const img=IMG[i],sm=img.replace('w=900&h=1200','w=450&h=600');
+    d.innerHTML=`<div class="meta"><span>${p.title}</span><span>${p.year}</span></div><div class="box"><div class="media" style="background:linear-gradient(160deg,${p.c[0]},${p.c[1]} 150%)"><img src="${img}" srcset="${sm} 450w, ${img} 900w" sizes="(max-width:600px) 78vw, (max-width:1024px) 44vw, 25vw" alt="" draggable="false" decoding="async" loading="lazy"></div><div class="ui"><b></b><b></b><b></b><b></b><span>[View project]</span></div></div>`;
     if(p.video){const v=document.createElement('video');Object.assign(v,{src:p.video,muted:true,loop:true,autoplay:true,playsInline:true});d.querySelector('.media').append(v);v.play().catch(()=>{});}
     track.append(d);
   });
@@ -149,53 +154,6 @@ addEventListener('pageshow',e=>{if(e.persisted&&gsap.getProperty('#wipe','yPerce
 function tick(){try{clock.textContent='Phnom Penh, (CAM) '+new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Phnom_Penh',hour:'numeric',minute:'2-digit'});}catch(e){}}
 tick();setInterval(tick,20000);
 </script>
-<script>/* full screen [+] / [–]. Browsers drop full screen on every page load, so this page holds full screen and the site
-   keeps running inside a full-screen frame on top of it; links navigate the frame until [–] or Esc */
-(function(){var b=document.getElementById('fsBtn');if(!b)return;var de=document.documentElement;
-if(window.top!==window){ // inside the full-screen frame: [–] asks the outer page to leave full screen
-  b.textContent='[–]';b.setAttribute('aria-pressed','true');
-  try{parent.postMessage({fsShell:'url',href:location.href,title:document.title},'*')}catch(e){}
-  b.addEventListener('click',function(){parent.postMessage({fsShell:'exit'},'*')});return}
-var req=de.requestFullscreen||de.webkitRequestFullscreen,ex=document.exitFullscreen||document.webkitExitFullscreen;
-if(!req){b.style.display='none';return}
-var on=function(){return document.fullscreenElement||document.webkitFullscreenElement},frame=null,href=location.href;
-function open(){
-  href=location.href;frame=document.createElement('iframe');frame.src=location.href;frame.title=document.title;frame.allow='autoplay; fullscreen';
-  frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:2147483647;background:#000;opacity:0;transition:opacity .3s';
-  frame.onload=function(){frame&&(frame.style.opacity='1');document.querySelectorAll('video').forEach(function(v){v.pause()})};
-  document.body.appendChild(frame);
-  de.style.filter='none'; // the frame applies its own theme; inverting it here as well would flip it twice
-}
-function close(){if(!frame)return;var f=frame;frame=null;de.style.filter='';
-  try{var l=localStorage.getItem('theme')==='light',t=document.getElementById('themeBtn'); // pick up a theme change made inside the frame
-    l?de.setAttribute('data-theme','light'):de.removeAttribute('data-theme');if(t){t.textContent=l?'F/1.4':'F/2.4';t.setAttribute('aria-pressed',l?'true':'false')}}catch(e){}
-  if(href.split('#')[0]!==location.href.split('#')[0]){location.href=href;return} // stay on the page the visitor ended up on
-  f.remove();document.querySelectorAll('video[autoplay],video').forEach(function(v){v.play().catch(function(){})});
-}
-addEventListener('message',function(e){var d=e.data;if(!frame||!d||e.source!==frame.contentWindow)return;
-  if(d.fsShell==='url'){href=d.href;if(d.title)document.title=d.title}
-  if(d.fsShell==='exit'&&on())ex.call(document)});
-b.addEventListener('click',function(){on()?ex.call(document):req.call(de)});
-var sync=function(){var f=!!on();b.textContent=f?'[–]':'[+]';b.setAttribute('aria-pressed',f?'true':'false');
-  if(f&&!frame)open();else if(!f&&frame)close()};
-document.addEventListener('fullscreenchange',sync);document.addEventListener('webkitfullscreenchange',sync);sync()})();</script>
-<script>(function(){var b=document.getElementById("themeBtn");if(!b)return;var r=document.documentElement;
-// F/2.4 = dark (default), F/1.4 = light; the choice is remembered across pages
-function sync(){var l=r.getAttribute("data-theme")==="light";b.textContent=l?"F/1.4":"F/2.4";b.setAttribute("aria-pressed",l?"true":"false");b.setAttribute("aria-label",l?"Switch to dark theme":"Switch to light theme")}
-b.addEventListener("click",function(){var l=r.getAttribute("data-theme")!=="light";if(l)r.setAttribute("data-theme","light");else r.removeAttribute("data-theme");try{localStorage.setItem("theme",l?"light":"dark")}catch(e){}sync()});sync()})();</script>
-<script>(function(){
-// header menu hover: letters scramble through random letters, numbers and symbols, then settle left to right (GSAP). The name/logo is left alone.
-if(!window.gsap||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
-var C="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+=?/<>[]{}~^",STEP=90; // STEP = ms between random swaps (higher = slower flicker)
-document.querySelectorAll("header a:not(.name),header button").forEach(function(el){var tw=null,t="",last=0,cur=[];
-  el.addEventListener("mouseenter",function(){if(tw)return;t=el.textContent;cur=t.split("");last=0;var o={p:0};
-    tw=gsap.to(o,{p:1,duration:.9+t.length*.05,ease:"none",onUpdate:function(){var n=Math.floor(o.p*t.length),now=performance.now(),swap=now-last>=STEP;if(swap)last=now;
-      for(var i=0;i<t.length;i++){if(i<n||t[i]===" ")cur[i]=t[i];else if(swap)cur[i]=C[Math.random()*C.length|0]}el.textContent=cur.join("")},
-      onComplete:function(){el.textContent=t;tw=null}})});
-  // a click restores the real label first, so the theme / fullscreen buttons can then swap it
-  el.addEventListener("click",function(){if(tw){tw.kill();tw=null;el.textContent=t}},true);
-});})();</script>
-<script>// no ghost image when dragging a photo, video or link (the pages use drag to scroll instead)
-document.addEventListener('dragstart',function(e){if(e.target&&e.target.closest&&e.target.closest('img,video,a,#track'))e.preventDefault()});</script>
+<script src="../js/site.js"></script>
 </body>
 </html>
