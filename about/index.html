@@ -151,24 +151,27 @@ img,video{display:block;width:100%;height:100%;object-fit:cover}
 .faq-h{font-family:var(--display);font-weight:700;font-size:clamp(24px,3.2vw,48px);line-height:1.2;max-width:20ch;margin-bottom:50px}
 .acc{border-top:1px solid rgba(255,255,255,.22)}
 
-/* FAQ Accordion Hover & Expanded States */
+/* FAQ Accordion Hover & Expanded States
+   every item has a full 1px border and overlaps the one above by 1px, so two highlighted
+   neighbours share a single line instead of drawing two */
 .aitem {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   position: relative;
-  transition: outline 0.3s ease, background 0.3s ease;
-  margin-bottom: -1px; 
+  border: 1px solid transparent;
+  border-bottom-color: rgba(255, 255, 255, 0.22);
+  margin-top: -1px;
+  transition: border-color 0.3s ease, background 0.3s ease;
 }
 
-/* FAQ Corner Markers */
+/* FAQ Corner Markers (same as the Contact us button) */
 .aitem::after {
   content: "";
   position: absolute;
-  inset: -1px; 
+  inset: -2px;
   background:
-    linear-gradient(#fff, #fff) top left / 4px 4px no-repeat,
-    linear-gradient(#fff, #fff) top right / 4px 4px no-repeat,
-    linear-gradient(#fff, #fff) bottom left / 4px 4px no-repeat,
-    linear-gradient(#fff, #fff) bottom right / 4px 4px no-repeat;
+    linear-gradient(#fff, #fff) top left / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) top right / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) bottom left / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) bottom right / 3px 3px no-repeat;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -177,8 +180,7 @@ img,video{display:block;width:100%;height:100%;object-fit:cover}
 
 /* Trigger targeting box on hover and open state */
 .aitem:hover, .aitem.is-open {
-  border-bottom-color: transparent;
-  outline: 1px solid rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.02);
   z-index: 2;
 }
