@@ -12,7 +12,7 @@
 <style>
 @font-face{font-family:'Fragment Mono';src:url("../fonts/FragmentMono-latin.woff2") format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:'Druk Wide Bold';src:url("../fonts/DrukWideBold.woff2") format("woff2");font-weight:700;font-display:swap}
-:root{--display:'Druk Wide Bold','Druk Wide Trial','Druk Wide','Archivo Black',Impact,sans-serif;--mono:'Fragment Mono',ui-monospace,Menlo,monospace;--gap:20px;--cw:calc((100vw - 30px - 3 * var(--gap)) / 4)}
+:root{--display:'Druk Wide Bold','Druk Wide Trial','Druk Wide','Archivo Black',Impact,sans-serif;--mono:'Fragment Mono',ui-monospace,Menlo,monospace;--gap:20px;--cw:calc((100vw - 30px - 3 * var(--gap)) / 4);--rb:84px}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#000;color:#fff;font:15px/1 var(--mono);text-transform:uppercase;overflow:hidden;overscroll-behavior:none}
 a{color:inherit;text-decoration:none}
@@ -20,7 +20,7 @@ a{color:inherit;text-decoration:none}
 
 
 
-#track{position:fixed;left:0;top:clamp(110px,30vh,271px);bottom:15px;display:flex;gap:var(--gap);padding:0 15px;will-change:transform;cursor:grab;touch-action:none;user-select:none}
+#track{position:fixed;left:0;top:clamp(110px,30vh,271px);bottom:var(--rb);display:flex;gap:var(--gap);padding:0 15px;will-change:transform;cursor:grab;touch-action:none;user-select:none}
 #track.drag{cursor:grabbing}
 .card{width:var(--cw);flex:none;display:flex;flex-direction:column;gap:14px}
 .meta{display:flex;justify-content:space-between;gap:12px;white-space:nowrap}.meta span:first-child{overflow:hidden;text-overflow:ellipsis}
@@ -32,11 +32,14 @@ a{color:inherit;text-decoration:none}
 @media(hover:hover){.card:hover .media{opacity:.5}.card:hover .ui{opacity:1}}
 .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* scroll ruler (canvas): ticks slide with the row, the center tick rises, ticks under the mouse lift */
+#ruler{position:fixed;left:15px;bottom:14px;width:calc(100% - 30px);height:60px;display:block;cursor:crosshair;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
 #wipe{position:fixed;inset:0;background:#fff;mix-blend-mode:difference;z-index:50;transform:translateY(100%);pointer-events:none}
-@media(max-width:1024px){:root{--cw:44vw}#track{top:120px}}
+@media(max-width:1024px){:root{--cw:44vw;--rb:70px}#ruler{height:50px;bottom:10px}#track{top:120px}}
 @media(max-width:600px){:root{--cw:78vw}#track{top:104px}}
 /* short landscape screens: size cards from the height so they stay portrait */
-@media(max-height:520px){:root{--cw:min(40vw,calc((100dvh - 80px) * .62))}#track{top:64px;bottom:10px}.card{gap:8px}}
+@media(max-height:520px){:root{--cw:min(40vw,calc((100dvh - 80px) * .62));--rb:44px}#track{top:64px}#ruler{height:32px;bottom:6px}.card{gap:8px}}
 /* ---- theme: F/2.4 = dark (default), F/1.4 = light. Light inverts the whole page, then flips photos and video back ---- */
 html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}
 html[data-theme="light"] img,html[data-theme="light"] video{filter:invert(1) hue-rotate(180deg)}
@@ -62,6 +65,7 @@ img,video{-webkit-user-drag:none;user-select:none}
   <div class="hr"><button type="button" class="fs" id="fsBtn" aria-label="Toggle full screen">[+]</button><button type="button" class="tb" id="themeBtn" aria-label="Switch to light theme" aria-pressed="false">F/2.4</button><a href="../slides/index.html" data-go aria-current="page">Index</a><a href="../about/index.html" data-go>About</a><a href="../contact/index.html" data-go>Contact</a></div>
 </header>
 <div id="track"></div>
+<canvas id="ruler" aria-hidden="true"></canvas>
 
 <script src="../vendor/gsap.min.js"></script>
 <script>
@@ -96,39 +100,91 @@ for(let c=0;c<COPIES;c++){
   });
 }
 
-// infinite smooth horizontal scroll (GSAP) with velocity bounce + skew
+// infinite smooth horizontal scroll, modelled on tlb.betteroff.studio:
+// input moves a target (S.t); the row eases toward it 10% per 60fps frame; cards tilt by how far they lag behind
 const S={t:0,x:0};
 let setW=1;
-const measure=()=>{const n=P.length;setW=track.children[n].offsetLeft-track.children[0].offsetLeft};
-measure();addEventListener('resize',measure);addEventListener('load',measure);
+const cards=[...track.children];
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-const wrapX=gsap.utils.wrap(0,1);
+const lerp=(a,b,k)=>a+(b-a)*k;
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
-gsap.set(track,{transformOrigin:'50% 50%'});
+
+// ruler: 9 ticks per project (the first one taller), one full ruler loop per set of projects
+const ruler=(()=>{
+  const cv=document.getElementById('ruler'),ctx=cv.getContext('2d');
+  const GAP=11,PER=9,LEN=P.length*PER;
+  let W=0,H=0,k=1,hx=-1,base=null,lift=new Float32Array(0);
+  const resize=()=>{
+    const dpr=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;
+    cv.width=W*dpr|0;cv.height=H*dpr|0;ctx.setTransform(dpr,0,0,dpr,0,0);
+    k=Math.min(1,H/60);lift=new Float32Array(Math.ceil(W/GAP)+4);base=null;
+  };
+  cv.addEventListener('pointermove',e=>{hx=e.offsetX});
+  cv.addEventListener('pointerleave',()=>{hx=-1});
+  const fall=d=>Math.pow(Math.max(0,1-d),1/.55);
+  const draw=(x,r)=>{
+    if(!W)return;
+    const U=x*LEN*GAP/setW,off=((U%GAP)+GAP)%GAP,first=Math.round((U-off)/GAP);
+    // when the grid scrolls by whole ticks, shift the eased heights so each stays with its tick
+    if(base!==null&&first!==base){
+      const d=first-base,n=lift.length;
+      if(Math.abs(d)>=n)lift.fill(0);
+      else if(d>0){lift.copyWithin(0,d);lift.fill(0,n-d)}
+      else{lift.copyWithin(-d,0,n+d);lift.fill(0,0,-d)}
+    }
+    base=first;
+    const mh=12*k,mjh=22*k,top=H-2,mid=Math.round((U+W/2)/GAP),near=10*GAP;
+    ctx.clearRect(0,0,W,H);ctx.strokeStyle='#fff';ctx.lineWidth=1;
+    for(let i=0,px=-off;px<=W+GAP;px+=GAP,i++){
+      const t=first+i,h0=((t%PER)+PER)%PER===0?mjh:mh;
+      let want=0;
+      if(t===mid)want=top-h0;
+      else if(hx>=0){const d=Math.abs(px-hx);if(d<near)want=18*k*fall(d/near);}
+      lift[i]=lerp(lift[i],want,Math.min(1,(t===mid?.2:.1)*r));
+      const h=h0+lift[i];
+      ctx.globalAlpha=t===mid?.25+.75*clamp((h-h0)/Math.max(1,top-h0),0,1):.25;
+      const X=Math.round(px)+.5;
+      ctx.beginPath();ctx.moveTo(X,H);ctx.lineTo(X,H-h);ctx.stroke();
+    }
+  };
+  return {resize,draw};
+})();
+
+const measure=()=>{const n=P.length;setW=track.children[n].offsetLeft-track.children[0].offsetLeft;ruler.resize()};
+measure();addEventListener('resize',measure);addEventListener('load',measure);
+const setX=gsap.quickSetter(track,'x','px'),tilt=gsap.quickSetter(cards,'rotationY','deg');
+gsap.set(cards,{transformPerspective:1000});
+let lastLag=0;
 gsap.ticker.add(()=>{
-  // lerp toward target (0.085, same as the reference)
-  S.x=S.x+(S.t-S.x)*.085;
+  const r=gsap.ticker.deltaRatio(60); // 1 at 60fps, 0.5 at 120fps -> same feel on every screen
+  S.x=lerp(S.x,S.t,Math.min(1,.1*r));
   if(Math.abs(S.t-S.x)<.01)S.x=S.t;
-  // velocity = remaining distance / viewport width -> squash + skew
-  const velo=RM?0:clamp((S.t-S.x)/innerWidth,-1,1),bounce=1-Math.abs(velo*.25),skew=velo*7.5;
   // wrap into one set width; middle copy is the "home" copy
-  const m=wrapX(S.x/setW)*setW;
-  gsap.set(track,{x:-(setW+m),scaleY:bounce,skewX:skew});
+  setX(-(setW+gsap.utils.wrap(0,setW,S.x)));
+  const lag=RM?0:Math.round((S.x-S.t)*1000)/1000;
+  if(lag!==lastLag){tilt(clamp(lag*.05,-25,25));lastLag=lag;}
+  ruler.draw(S.x,r);
 });
 const push=d=>{S.t+=d};
-addEventListener('wheel',e=>{e.preventDefault();push((Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*1.2);},{passive:false});
-addEventListener('keydown',e=>{const s=innerWidth/4;if(e.key==='ArrowRight')push(s);if(e.key==='ArrowLeft')push(-s);});
-// drag / swipe
-let down=false,sx=0,sy=0,st=0,lx=0,vel=0,moved=0,ax=0;
-track.addEventListener('pointerdown',e=>{down=true;moved=0;ax=0;sx=e.clientX;sy=e.clientY;lx=0;st=S.t;vel=0;track.classList.add('drag');});
+const WHEEL=/Windows/.test(navigator.userAgent)?.9:.4; // Windows wheels send bigger, coarser steps
+addEventListener('wheel',e=>{
+  e.preventDefault();
+  const u=e.deltaMode===1?16:e.deltaMode===2?innerHeight:1;
+  push((Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*u*WHEEL);
+},{passive:false});
+// arrows step exactly one card
+addEventListener('keydown',e=>{const s=cards[1].offsetLeft-cards[0].offsetLeft;if(e.key==='ArrowRight')push(s);if(e.key==='ArrowLeft')push(-s);});
+// drag / swipe: the target follows the pointer at 2x, the easing above supplies the glide
+let down=false,sx=0,sy=0,st=0,moved=0,ax=0,mult=2;
+track.addEventListener('pointerdown',e=>{down=true;moved=0;ax=0;sx=e.clientX;sy=e.clientY;st=S.t;mult=e.pointerType==='touch'?2.5:2;track.classList.add('drag');});
 track.addEventListener('pointermove',e=>{if(!down)return;
   // follow whichever axis the gesture started on (vertical swipes on phones scroll the row as well)
   const dx=e.clientX-sx,dy=e.clientY-sy;if(!ax&&Math.max(Math.abs(dx),Math.abs(dy))>6)ax=Math.abs(dx)>=Math.abs(dy)?1:2;
-  const d=ax===2?dy:dx,p=sx+sy+d;
-  S.t=st-d;moved=Math.max(moved,Math.abs(d));
+  const d=ax===2?dy:dx;
+  S.t=st-d*mult;moved=Math.max(moved,Math.abs(d));
   if(moved>6&&!track.hasPointerCapture(e.pointerId))track.setPointerCapture(e.pointerId); // capture only once it's a real drag, so clicks still hit the links
-  vel=lx?lx-p:0;lx=p;});
-const up=()=>{if(!down)return;down=false;track.classList.remove('drag');S.t+=vel*14;};
+});
+const up=()=>{if(!down)return;down=false;track.classList.remove('drag');};
 track.addEventListener('pointerup',up);track.addEventListener('pointercancel',up);
 
 // intro
