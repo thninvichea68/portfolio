@@ -336,7 +336,7 @@ img,video{-webkit-user-drag:none;user-select:none}
 
 <footer class="end" id="contact">
   <span>© 2026 Han Seakvitheathnin</span>
-  <span>hello@hsvtn.com</span>
+  <span>thninvichea@gmail.com</span>
 </footer>
 
 <script src="../vendor/gsap.min.js"></script>
@@ -353,14 +353,15 @@ const Q=[
 ["What is the project investment?",["Pricing depends on scope; most sites fall in a fixed range agreed on before work starts.","No hourly surprises — you'll know the number upfront."]]
 ];
 const T=[
-["t1","Nicole","Tech Industry"],
-["t2","Michael","Detective"],
-["t3","Sara","Fashion"],
-["t4","David","Automotive"],
-["t5","Amara","Beauty"]
+["t1","Nicole","Tech Industry","Our launch site finally feels as fast as the product. Every interaction was considered, and the handoff was so clean our engineers barely had questions."],
+["t2","Michael","Detective","I needed something discreet but credible. They stripped the noise away and built a site that earns trust in the first five seconds."],
+["t3","Sara","Fashion","They understood the collection before I finished explaining it. The motion, the type, the pacing — it reads like an editorial, not a storefront."],
+["t4","David","Automotive","Tight deadline, heavy imagery, zero compromise on speed. They delivered a build that feels engineered, which is exactly what our brand needed."],
+["t5","Amara","Beauty","Bookings doubled the month we launched. Clients keep telling me the site feels calm and luxurious — exactly the experience I give in the studio."]
 ];
-const card=t=>`<div class="tcard"><i class="t"></i><i class="b"></i><div class="av"><img src="https://picsum.photos/seed/${t[0]}/124/154" alt="" loading="lazy" decoding="async" width="62" height="77"><div class="who"><b>${t[1]}</b>${t[2]}</div></div><p>The brief was simple: capture the untamed gravity of an icon in motion for the editorial publishing space. This project explores raw vulnerability and absolute power.</p></div>`;
-document.getElementById('testiTrack').innerHTML = T.map(card).join('') + T.map(card).join('');
+const card=(t,clone)=>`<div class="tcard"${clone?' aria-hidden="true"':''}><i class="t"></i><i class="b"></i><div class="av"><img src="https://picsum.photos/seed/${t[0]}/124/154" alt="" loading="lazy" decoding="async" width="62" height="77"><div class="who"><b>${t[1]}</b>${t[2]}</div></div><p>${t[3]}</p></div>`;
+// one real set + clones; the loop script adds more clones if a wide screen needs them
+document.getElementById('testiTrack').innerHTML = T.map(t=>card(t)).join('') + T.map(t=>card(t,1)).join('');
 
 // service hover -> crossfade big image on the left
 (function(){
@@ -416,18 +417,27 @@ const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 gsap.registerPlugin(ScrollTrigger);
 const $=(q,c=document)=>c.querySelector(q),$$=(q,c=document)=>[...c.querySelectorAll(q)];
 
-// auto-scroll cards: GSAP ticker keeps it moving (hover never stops it) + drag left/right
+// seamless infinite loop: GSAP ticker drives x, wrapped over the exact width of one set + drag/flick
 (function(){
   const box=document.querySelector('.testi'),track=document.getElementById('testiTrack');
   if(!box||!track)return;
   const SPEED=(typeof RM!=='undefined'&&RM)?0:60;   // px per second (auto-scroll)
-  let x=0,half=0,dragging=false,startX=0,startPos=0,vel=0,lastX=0,lastT=0;
+  let x=0,period=0,dragging=false,startX=0,startPos=0,vel=0,lastX=0,lastT=0;
   const set=gsap.quickSetter(track,'x','px');
-  const measure=()=>{half=track.offsetWidth/2};
+  const measure=()=>{
+    const cards=track.children,n=T.length;
+    // sub-pixel distance from card 0 to its first clone = one full set, so the wrap is invisible
+    period=cards[n]?cards[n].getBoundingClientRect().left-cards[0].getBoundingClientRect().left:0;
+    // keep at least one set's width of clones past the viewport so no gap appears before the wrap
+    while(period&&track.children.length/n*period<period+box.offsetWidth+period*.5)
+      track.insertAdjacentHTML('beforeend',T.map(t=>card(t,1)).join(''));
+    x=wrap(x);
+  };
+  const wrap=v=>period?gsap.utils.wrap(-period,0,v):v;
   measure();addEventListener('resize',measure);addEventListener('load',measure);
-  const wrap=v=>half?gsap.utils.wrap(-half,0,v):v;
+  if(document.fonts)document.fonts.ready.then(measure);
   gsap.ticker.add((t,dt)=>{
-    if(!half)measure();
+    if(!period)measure();
     const s=dt/1000;
     if(!dragging){
       // momentum from a flick eases back into the constant auto-scroll speed
