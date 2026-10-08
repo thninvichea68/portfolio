@@ -259,16 +259,17 @@ footer.end{padding:26px 20px 40px;display:flex;justify-content:space-between;fon
 html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}
 html[data-theme="light"] img,html[data-theme="light"] video{filter:invert(1) hue-rotate(180deg)}
 /* ---- shared navbar (same on every page) ---- */
-header{position:fixed;top:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;gap:24px;padding:calc(22px + env(safe-area-inset-top,0px)) max(15px,env(safe-area-inset-right,0px)) 22px max(15px,env(safe-area-inset-left,0px));mix-blend-mode:difference;color:#fff;pointer-events:none;font:13px/1.3 var(--mono);text-transform:uppercase}
+header{position:fixed;top:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;padding:calc(22px + env(safe-area-inset-top,0px)) max(15px,env(safe-area-inset-right,0px)) 22px max(15px,env(safe-area-inset-left,0px));mix-blend-mode:difference;color:#fff;pointer-events:none;font:13px/1.3 var(--mono);text-transform:uppercase}
 header a,header span,header button{pointer-events:auto}
 .hl{display:flex;gap:clamp(24px,3.5vw,56px);white-space:nowrap}.hr{display:flex;justify-content:flex-end;gap:clamp(24px,5vw,96px);white-space:nowrap}
-.name{font-family:var(--display);font-size:13px;text-align:center;white-space:nowrap}
+.name{font-family:var(--display);font-size:28px;line-height:.9;margin:-4px 0;text-align:center;white-space:nowrap}
+.name .reg{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:.62em;line-height:0;vertical-align:.75em;margin-left:.18em}
 header .fs,header .tb{white-space:nowrap;background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;text-transform:inherit;cursor:pointer}
 @media(max-width:1300px){.hl span:nth-child(2){display:none}}
 /* tablet / phone landscape: one row, name left, links right */
-@media(max-width:1024px){header{display:flex;align-items:baseline;gap:20px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:16px}.name{order:-1;margin-right:auto;text-align:left;font-size:12px}.hl span{display:none}.hl,.hr{gap:20px}}
+@media(max-width:1024px){header{display:flex;align-items:baseline;gap:20px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:16px}.name{order:-1;margin:0 auto 0 0;text-align:left;font-size:20px}.hl span{display:none}.hl,.hr{gap:20px}}
 /* phone: name (+ fullscreen) on the first row, the four links spread across the second */
-@media(max-width:600px){header{flex-wrap:wrap;justify-content:space-between;row-gap:10px;column-gap:0;padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:14px;font-size:12px}.name{flex:1 1 calc(100% - 40px);font-size:11px}.hr{display:contents}header .fs{order:-1}}
+@media(max-width:600px){header{flex-wrap:wrap;justify-content:space-between;row-gap:10px;column-gap:0;padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:14px;font-size:12px}.name{flex:1 1 calc(100% - 40px);font-size:18px}.hr{display:contents}header .fs{order:-1}}
 img,video{-webkit-user-drag:none;user-select:none}
 </style>
 </head>
@@ -277,19 +278,19 @@ img,video{-webkit-user-drag:none;user-select:none}
 
 <header>
   <div class="hl"><span id="clock">Phnom Penh, (CAM) 4:00 PM</span><span>Stay focused.</span><a href="../index.html" data-go>Work [15]</a></div>
-  <a class="name" href="../index.html" data-go>Han Seakvitheathnin</a>
+  <a class="name" href="../index.html" data-go aria-label="Han Seakvitheathnin, home">HSVTN<sup class="reg" aria-hidden="true">®</sup></a>
   <div class="hr"><button type="button" class="fs" id="fsBtn" aria-label="Toggle full screen">[+]</button><button type="button" class="tb" id="themeBtn" aria-label="Switch to light theme" aria-pressed="false">F/2.4</button><a href="../slides/index.html" data-go>Index</a><a href="../about/index.html" data-go aria-current="page">About</a><a href="../contact/index.html" data-go>Contact</a></div>
 </header>
 
 <section id="s1">
-  <div class="h1">HAN SEAK<br>VITHEATHNIN</div>
+  <div class="h1">FROM IDEA<br>TO INTERFACE</div>
   <div class="role">FRONTEND DESIGNER</div>
   <div class="s1-grid">
     <div class="hero-img imnoise"><img src="https://picsum.photos/seed/hero/1400/960" alt="" fetchpriority="high"></div>
     <div class="col-r">
       <div class="top-r">
         <div class="about-copy">ABOUT ME //</div>
-        <p class="about-txt">The brief was simple: capture the untamed gravity of an icon in motion for the editorial publishing space. Set against stark, brutalist architecture, this project explores the intersection of raw vulnerability and absolute power.</p>
+        <p class="about-txt">Hi, I'm Han Seakvitheathnin, a junior software developer studying at Norton University, with a passion for design, digital craft and animation. I help people turn the platforms they imagine into reality, built with care down to the last detail.</p>
       </div>
       <div class="stack2">
         <div class="im imnoise"><img src="https://picsum.photos/seed/about/700/970" alt=""></div>
